@@ -89,6 +89,7 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/kabgor.png"
+  image_path_ios: "assets/images/kabgor.png"
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
