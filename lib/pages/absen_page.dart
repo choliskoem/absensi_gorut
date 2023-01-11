@@ -144,6 +144,7 @@ class _AbsenPageState extends State<AbsenPage> {
         });
       } else if (Platform.isIOS) {
         var data = await deviceInfoPlugin.iosInfo;
+        buttondisabled = !(myInt <= 6);
         buttondisabledharian = buttondisabled! && !spt!;
         buttondisabledluar = !spt !;
         buttonsakitdisabled = !spt!;
