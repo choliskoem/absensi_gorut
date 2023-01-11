@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "31256549746",
+    "project_id": "pgads-f8f90",
+    "storage_bucket": "pgads-f8f90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31256549746:android:8e12ce26246fe0642a65eb",
+        "android_client_info": {
+          "package_name": "com.smartdataintegrasi.pgbill"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31256549746-5cfmhnegr33uttafk7t410scqq99h8lp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3-tJUKp04oAKCcDiA6g_IqYXsom77qAk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31256549746-5cfmhnegr33uttafk7t410scqq99h8lp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31256549746:android:953c5b5cd616c7b12a65eb",
+        "android_client_info": {
+          "package_name": "com.smartdataintegrasi.visitinggorontalo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31256549746-5cfmhnegr33uttafk7t410scqq99h8lp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3-tJUKp04oAKCcDiA6g_IqYXsom77qAk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31256549746-5cfmhnegr33uttafk7t410scqq99h8lp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31256549746:android:cd46016503a0876f2a65eb",
+        "android_client_info": {
+          "package_name": "id.go.gorutkab.absensi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31256549746-5cfmhnegr33uttafk7t410scqq99h8lp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3-tJUKp04oAKCcDiA6g_IqYXsom77qAk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31256549746-5cfmhnegr33uttafk7t410scqq99h8lp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

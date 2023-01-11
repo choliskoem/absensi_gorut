@@ -12,9 +12,9 @@
     <string>Older devices need location.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Can I have location always?</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<key>NSMicrophoneUsageDescription</key>
+    <key>NSMicrophoneUsageDescription</key>
     <string>microphone</string>
+	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Absensi</string>
