@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:absensi/pages/home_page.dart';
+import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/services/multipart/multipart-service.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +36,8 @@ class _AbsenSakitState extends State<AbsenSakit> {
       Service service = Service();
       Uint8List bytes = await image.readAsBytes();
       service.AbsenSakit(bytes).then((value) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  Navigasi()));
+
       });
       setState(() {
         _loading = false;
@@ -99,44 +102,47 @@ class _AbsenSakitState extends State<AbsenSakit> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 38),
-                  child: Container(
-                    width: 300,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          // topLeft: Radius.circular(10),
-                          // topRight: Radius.circular(10),
+                  child: WillPopScope(
+                    onWillPop: () async => false,
+                    child: Container(
+                      width: 300,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            // topLeft: Radius.circular(10),
+                            // topRight: Radius.circular(10),
+                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: MyColor.orange1,
+                            blurRadius: 1,
+                            // Shadow position
                           ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: MyColor.orange1,
-                          blurRadius: 1,
-                          // Shadow position
-                        ),
-                      ],
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 25),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "Mohon Tunggu\nSedang Diproses..",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CircularProgressIndicator(
-                          backgroundColor: Colors.grey,
-                          color: Colors.purple,
-                          strokeWidth: 5,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: 120,
-                        ),
-                      ],
+                        ],
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 25),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            "Mohon Tunggu\nSedang Diproses..",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CircularProgressIndicator(
+                            backgroundColor: Colors.grey,
+                            color: Colors.purple,
+                            strokeWidth: 5,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            width: 120,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

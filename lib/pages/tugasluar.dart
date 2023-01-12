@@ -37,7 +37,7 @@ class _TugasLuarState extends State<TugasLuar> {
       Service service = Service();
       Uint8List bytes = await image.readAsBytes();
       service.Tugasluar(bytes).then((value) {
-        Navigator.pop(context);
+
         Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  RekapAbsen()));
       });
       setState(() {
@@ -111,56 +111,59 @@ class _TugasLuarState extends State<TugasLuar> {
                 },
                 child: const Icon(Icons.camera_alt),
               ))
-          : Column(
-              children: [
-                SizedBox(
-                  height: 250,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 38),
-                  child: Container(
-                    width: 300,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          // topLeft: Radius.circular(10),
-                          // topRight: Radius.circular(10),
+          : WillPopScope(
+             onWillPop: () async => false,
+            child: Column(
+                children: [
+                  SizedBox(
+                    height: 250,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 38),
+                    child: Container(
+                      width: 300,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            // topLeft: Radius.circular(10),
+                            // topRight: Radius.circular(10),
+                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: MyColor.orange1,
+                            blurRadius: 1,
+                            // Shadow position
                           ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: MyColor.orange1,
-                          blurRadius: 1,
-                          // Shadow position
-                        ),
-                      ],
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 25),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "Mohon Tunggu\nSedang Diproses..",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CircularProgressIndicator(
-                          backgroundColor: Colors.grey,
-                          color: Colors.purple,
-                          strokeWidth: 5,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: 120,
-                        ),
-                      ],
+                        ],
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 25),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            "Mohon Tunggu\nSedang Diproses..",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CircularProgressIndicator(
+                            backgroundColor: Colors.grey,
+                            color: Colors.purple,
+                            strokeWidth: 5,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            width: 120,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+          ),
     );
   }
 }

@@ -425,7 +425,7 @@ class _AbsenPageState extends State<AbsenPage> {
                                   final firstCamera = cameras.first;
 
                                   Navigator.of(context, rootNavigator: false)
-                                      .push(MaterialPageRoute(
+                                      .pushReplacement(MaterialPageRoute(
                                       builder: (context) =>
                                           SecondPage(camera: firstCamera),
                                       maintainState: false));
@@ -461,11 +461,6 @@ class _AbsenPageState extends State<AbsenPage> {
                               if (_isButtonDisabledLuar!) {
                                 final cameras = await availableCameras();
                                 await availableCameras().then((value) =>
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (_) =>
-                                    //             TugasLuar(camera: cameras))));
                                 Navigator.of(context, rootNavigator: false)
                                     .pushReplacement(MaterialPageRoute(
                                   builder: (context) =>  TugasLuar(camera: cameras),
@@ -530,7 +525,7 @@ class _AbsenPageState extends State<AbsenPage> {
                               if (_isButtonSakitDisabled!) {
                                 final cameras = await availableCameras();
                                 await availableCameras().then((value) =>
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                             builder: (_) =>
