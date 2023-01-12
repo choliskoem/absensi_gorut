@@ -57,6 +57,7 @@ dependencies:
   trust_location: ^2.0.13
   firebase_core: ^2.4.1
   firebase_crashlytics: ^3.0.9
+  package_info_plus: ^3.0.2
 
 
 

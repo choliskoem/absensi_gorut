@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:absensi/pages/rekap_absen.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:absensi/services/multipart/multipart-service.dart';
@@ -37,6 +38,7 @@ class _TugasLuarState extends State<TugasLuar> {
       Uint8List bytes = await image.readAsBytes();
       service.Tugasluar(bytes).then((value) {
         Navigator.pop(context);
+        Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  RekapAbsen()));
       });
       setState(() {
         _loading = false;

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:absensi/common/my_color.dart';
 import 'package:absensi/common/my_typhography.dart';
 import 'package:absensi/models/status_absen/status_absen_body.dart';
@@ -82,6 +82,20 @@ class _AbsenPageState extends State<AbsenPage> {
   String? UnitKerja;
 
   String? Nama;
+  String? _versionapp;
+
+  void package() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    String appName = packageInfo.appName;
+    String packageName = packageInfo.packageName;
+    String versionapp = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+
+    setState(() {
+      _versionapp = versionapp;
+    });
+  }
 
   void tampil() {
     String unit;
@@ -216,6 +230,7 @@ class _AbsenPageState extends State<AbsenPage> {
     tampil();
     getLocation();
     time();
+    package();
   }
 
   @override
@@ -371,17 +386,15 @@ class _AbsenPageState extends State<AbsenPage> {
                     padding: const EdgeInsets.symmetric(vertical: 25),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 100),
-                          child: Row(
+                         Column(
                             children: [
                               Visibility(
                                 visible: buttondisabledharian!,
-                                child: Center(child: Text("Absen Harian")),
+                                child: Container(child: Text("Absen Harian")),
                               ),
                             ],
                           ),
-                        ),
+
                         Visibility(
                           visible: buttondisabledharian!,
                           child: MyButton(
@@ -433,16 +446,14 @@ class _AbsenPageState extends State<AbsenPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 100),
-                          child: Row(
+                       Column(
                             children: [
                               Visibility(
                                   visible: buttondisabledluar!,
-                                  child: Text("Absen Tugas Luar")),
+                                  child: Container(child: Text("Absen Tugas Luar"))),
                             ],
                           ),
-                        ),
+
                         Visibility(
                           visible: buttondisabledluar!,
                           child: MyButton(
@@ -450,11 +461,15 @@ class _AbsenPageState extends State<AbsenPage> {
                               if (_isButtonDisabledLuar!) {
                                 final cameras = await availableCameras();
                                 await availableCameras().then((value) =>
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                TugasLuar(camera: cameras))));
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (_) =>
+                                    //             TugasLuar(camera: cameras))));
+                                Navigator.of(context, rootNavigator: false)
+                                    .pushReplacement(MaterialPageRoute(
+                                  builder: (context) =>  TugasLuar(camera: cameras),
+                                )));
                               }
                             },
                             color: _isButtonDisabledLuar!
@@ -499,16 +514,15 @@ class _AbsenPageState extends State<AbsenPage> {
                         SizedBox(
                           height: 20,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 100),
-                          child: Row(
+
+                          Column(
                             children: [
                               Visibility(
                                   visible: buttonsakitdisabled!,
-                                  child: Text("Absen Sakit")),
+                                  child: Container(child: Text("Absen Sakit"))),
                             ],
                           ),
-                        ),
+
                         Visibility(
                           visible: buttonsakitdisabled!,
                           child: MyButton(
@@ -532,6 +546,10 @@ class _AbsenPageState extends State<AbsenPage> {
                               child: Text("Sakit"),
                             ),
                           ),
+                        ),
+                        SizedBox(height: 50,),
+                        Container(
+                          child: Text('Version : $_versionapp'),
                         ),
                       ],
                     ),
