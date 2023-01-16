@@ -19,6 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:trust_location/trust_location.dart';
+import 'package:location_permissions/location_permissions.dart';
 
 class AbsenPage extends StatefulWidget {
   const AbsenPage({Key? key}) : super(key: key);
@@ -224,6 +225,7 @@ class _AbsenPageState extends State<AbsenPage> {
   void initState() {
     super.initState();
     _asyncMethod();
+    requestLocationPermission();
     TrustLocation.start(1);
     CheckUserConeection();
     _getId();
@@ -233,6 +235,11 @@ class _AbsenPageState extends State<AbsenPage> {
     package();
   }
 
+  void requestLocationPermission() async {
+    PermissionStatus permission =
+    await LocationPermissions().requestPermissions();
+    print('permissions: $permission');
+  }
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
