@@ -27,8 +27,10 @@ class _RekapAbsenState extends State<RekapAbsen> {
   }
 
   List<Widget> widgets = [];
-  late Icon iconKeluar;
-  late Icon iconMasuk;
+  Icon? iconKeluar;
+  Icon? iconMasuk;
+  IconButton? iconButtonkeluar;
+  IconButton? iconButtonmasuk;
 
   @override
   void initState() {
@@ -48,7 +50,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
       String st = "";
       print(st.isEmpty);
 
-      if( rekapanAbsen.isEmpty) {
+      if (rekapanAbsen.isEmpty) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -57,8 +59,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
                   "Perhatian!!",
                   style: TextStyle(color: Colors.red),
                 ),
-                content: Text(
-                    "Anda belum melakukan absensi untuk bulan ini."),
+                content: Text("Anda belum melakukan absensi untuk bulan ini."),
                 actions: [
                   ElevatedButton(
                       onPressed: () {
@@ -68,45 +69,72 @@ class _RekapAbsenState extends State<RekapAbsen> {
                 ],
               );
             });
-      }
-      else{
+      } else {
         rekapanAbsen!.forEach((element) {
-          String tanggal = tahun + "-" + bulan + "-" + element['hari'].toString();
+          String tanggal =
+              tahun + "-" + bulan + "-" + element['hari'].toString();
           String jamMasuk = "-";
           String jamKeluar = "-";
 
-          iconKeluar = Icon(
-            Icons.dangerous,
-            size: 50,
-            color: Colors.red,
+          iconButtonkeluar = IconButton(
+            iconSize: 50,
+            icon: const Icon(
+              Icons.dangerous,
+              color: Colors.red,
+            ),
+            onPressed: () {
+            Fluttertoast.showToast(msg: 'pindah halaman');
+            },
           );
-          iconMasuk = Icon(
-            Icons.dangerous,
-            size: 50,
-            color: Colors.red,
+
+          iconButtonmasuk = IconButton(
+            iconSize: 50,
+            icon: const Icon(
+              Icons.dangerous,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              // ...
+            },
           );
 
           if (element['absenKeluar'] != null) {
             switch (element['absenKeluar']['stsValid']) {
               case null:
-                iconKeluar = Icon(
-                  Icons.question_mark_rounded,
-                  size: 50,
-                  color: Colors.grey,
+                iconButtonkeluar = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.question_mark_rounded,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
                 );
+
                 break;
               case true:
-                iconKeluar = Icon(
-                  Icons.check_circle,
-                  size: 50,
-                  color: Colors.green,
+                iconButtonkeluar = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
                 );
                 break;
               case false:
-                iconKeluar = Icon(
-                  Icons.dangerous,
-                  size: 50,
-                  color: Colors.green,
+                iconButtonkeluar = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.dangerous,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
                 );
                 break;
             }
@@ -115,31 +143,47 @@ class _RekapAbsenState extends State<RekapAbsen> {
           if (element['absenMasuk'] != null) {
             switch (element['absenMasuk']['stsValid']) {
               case null:
-                iconMasuk = Icon(
-                  Icons.question_mark_rounded,
-                  size: 50,
-                  color: Colors.grey,
+                iconButtonmasuk = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.question_mark_rounded,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
                 );
                 break;
               case true:
-                iconMasuk = Icon(
-                  Icons.check_circle,
-                  size: 50,
-                  color: Colors.green,
+                iconButtonmasuk = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
                 );
+
                 break;
               case false:
-                iconMasuk = Icon(
-                  Icons.dangerous,
-                  size: 50,
-                  color: Colors.green,
+                iconButtonmasuk = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.dangerous,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
                 );
+
                 break;
             }
             jamMasuk = element['absenMasuk']['jam'];
           }
           // Fluttertoast.showToast(msg: ['jenisAbsensi']);
-
 
           tempWidget.add(Container(
             width: MediaQuery.of(context).size.width,
@@ -175,9 +219,9 @@ class _RekapAbsenState extends State<RekapAbsen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        iconMasuk,
+                        iconButtonmasuk!,
                         Text(tanggal),
-                        iconKeluar,
+                        iconButtonkeluar!,
                       ],
                     ),
                     SizedBox(
@@ -200,7 +244,6 @@ class _RekapAbsenState extends State<RekapAbsen> {
           widgets = tempWidget;
         });
       }
-
     });
   }
 

@@ -36,9 +36,9 @@ class _AbsenPageState extends State<AbsenPage> {
   Future<void> getLocation() async {
     try {
       TrustLocation.onChange.listen((values) => setState(() {
-        _latitude = values.latitude!;
-        _longitude = values.longitude!;
-        _isMockLocation = values.isMockLocation!;
+        _latitude = values.latitude;
+        _longitude = values.longitude;
+        _isMockLocation = values.isMockLocation;
       }));
     } on PlatformException catch (e) {
       print('PlatformException $e');
@@ -227,10 +227,11 @@ class _AbsenPageState extends State<AbsenPage> {
     _asyncMethod();
     requestLocationPermission();
     TrustLocation.start(1);
+    getLocation();
     CheckUserConeection();
     _getId();
     tampil();
-    getLocation();
+
     time();
     package();
   }
@@ -564,11 +565,11 @@ class _AbsenPageState extends State<AbsenPage> {
       ),
     );
   }
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('_longitude', _longitude));
-  }
+  // @override
+  // void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  //   super.debugFillProperties(properties);
+  //   properties.add(StringProperty('_longitude', _longitude));
+  // }
 }
 
 

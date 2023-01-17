@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class AbsenPageOffline extends StatefulWidget {
   const AbsenPageOffline({Key? key}) : super(key: key);
@@ -34,6 +35,20 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
     setState(() {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    });
+  }
+  String? _versionapp;
+
+  void package() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    String appName = packageInfo.appName;
+    String packageName = packageInfo.packageName;
+    String versionapp = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+
+    setState(() {
+      _versionapp = versionapp;
     });
   }
 
@@ -198,6 +213,7 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
     tampil();
     kondisispt();
     time();
+    package();
   }
 
   @override
@@ -421,8 +437,9 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
+                        SizedBox(height: 50,),
+                        Container(
+                          child: Text('Version : $_versionapp'),
                         ),
                         // Padding(
                         //   padding: EdgeInsets.symmetric(horizontal: 100),
