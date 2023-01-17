@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:absensi/offline/configpage.dart';
 import 'package:absensi/pages/HttpOverrides.dart';
 import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/pages/splashscreen.dart';
@@ -76,6 +77,7 @@ class _MyAppState extends State<MyApp> {
                 : SplashScreen()
             : cekconfig
                 ? Text("ke halaman utama")
-                : Text("ke halaman pertama"));
+                : ConfigPage(),
+    );
   }
 }

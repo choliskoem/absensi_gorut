@@ -59,6 +59,8 @@ dependencies:
   firebase_crashlytics: ^3.0.9
   package_info_plus: ^3.0.2
   location_permissions: ^4.0.1
+  proste_bezier_curve: ^2.0.2
+  file_picker: ^5.2.5
 
 
 
