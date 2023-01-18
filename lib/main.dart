@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:absensi/offline/configpage.dart';
+import 'package:absensi/offline/widget/splashscreenoff.dart';
 import 'package:absensi/pages/HttpOverrides.dart';
 import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/pages/splashscreen.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:path_provider/path_provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -35,6 +37,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool ActiveConnection = false;
   bool cekconfig = false;
+  File? _filePath;
+
+  bool _filexists = false;
 
   Future CheckUserConeection() async {
     try {
@@ -52,11 +57,32 @@ class _MyAppState extends State<MyApp> {
       });
     }
   }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/track.json');
+  }
+
+  void read() async {
+    _filePath = await _localFile;
+
+    // 0. Check whether the _file exists
+    _filexists = await _filePath!.exists();
+
+    print('0. File exists? $_filexists');
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     CheckUserConeection();
+    read();
   }
 
   @override
@@ -75,9 +101,9 @@ class _MyAppState extends State<MyApp> {
             ? isLogin
                 ? SplashScreenNav()
                 : SplashScreen()
-            : cekconfig
-                ? Text("ke halaman utama")
-                : ConfigPage(),
+            : _filexists
+                ? SplashScreenNav()
+                : SplashScreenoff(),
     );
   }
 }

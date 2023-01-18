@@ -161,7 +161,7 @@ class _AbsenPageState extends State<AbsenPage> {
         var data = await deviceInfoPlugin.iosInfo;
         buttondisabled = true;
         buttondisabledharian = buttondisabled! && !spt!;
-        buttondisabledluar = !spt !;
+        buttondisabledluar = !spt!;
         buttonsakitdisabled = !spt!;
 
         setState(() {

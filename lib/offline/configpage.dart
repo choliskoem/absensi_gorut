@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:absensi/main.dart';
 import 'package:absensi/offline/widget/configcontainer.dart';
+import 'package:absensi/pages/splashscreennav.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path/path.dart';
+
+import 'package:path_provider/path_provider.dart';
 
 class ConfigPage extends StatefulWidget {
   const ConfigPage({Key? key}) : super(key: key);
@@ -18,10 +21,13 @@ class _ConfigPageState extends State<ConfigPage> {
   FilePickerResult? result;
   String? _versionapp;
   List<PlatformFile> files = [];
-  bool visible = false;
+  bool visible = true;
 
   File? _filePath;
-  String _fileExists = "";
+
+  bool _filexists = false;
+
+
 
   void package() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -36,33 +42,37 @@ class _ConfigPageState extends State<ConfigPage> {
     });
   }
 
-
   Widget _submitButton() {
     return Visibility(
+      visible: !visible,
       child: Align(
         alignment: Alignment.centerRight,
         child: InkWell(
           onTap: () async {
-            result = await FilePicker.platform.pickFiles(allowMultiple: false);
-            if (result == null) {
-              print("No file selected");
-            } else {
-              setState(() {});
-              result?.files.forEach((element) {
-                print(element.name);
-              });
+            final result =
+                await FilePicker.platform.pickFiles(allowMultiple: false);
 
-          }
+            if (result == null) return;
+
+            final file = result.files.first;
+
+            final newfile = await savepermanently(file);
+
+            print('from path : ${file.path}');
+            print('to path  : ${newfile!.path}');
+
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (BuildContext context) => ConfigPage()));
           },
           child:
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             SizedBox.fromSize(
               size: Size.square(70.0), // button width and height
               child: ClipOval(
                 child: Material(
                   color: Color.fromRGBO(76, 81, 93, 1),
                   child:
-                  Icon(Icons.upload, color: Colors.white), // button color
+                      Icon(Icons.upload, color: Colors.white), // button color
                 ),
               ),
             ),
@@ -79,35 +89,35 @@ class _ConfigPageState extends State<ConfigPage> {
       ),
     );
   }
-
-  Widget _configButton() {
+  Widget _nextButton() {
     return Visibility(
       visible: visible,
       child: Align(
         alignment: Alignment.centerRight,
         child: InkWell(
           onTap: () async {
-
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (BuildContext context) => SplashScreenNav()));
           },
           child:
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(
-              'Konfigurasi',
-              style: TextStyle(
-                  color: Color.fromRGBO(76, 81, 93, 1),
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                  height: 1.6),
-            ),
             SizedBox.fromSize(
               size: Size.square(70.0), // button width and height
               child: ClipOval(
                 child: Material(
                   color: Color.fromRGBO(76, 81, 93, 1),
                   child:
-                  Icon(Icons.settings, color: Colors.white), // button color
+                  Icon(Icons.arrow_right_alt_rounded, color: Colors.white), // button color
                 ),
               ),
+            ),
+            Text(
+              'Konfigurasi Selesai',
+              style: TextStyle(
+                  color: Color.fromRGBO(76, 81, 93, 1),
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
+                  height: 1.6),
             ),
           ]),
         ),
@@ -115,92 +125,117 @@ class _ConfigPageState extends State<ConfigPage> {
     );
   }
 
+  Future<File?> savepermanently(PlatformFile file) async {
+    final appstorage = await getApplicationDocumentsDirectory();
+    final newfile = File('${appstorage.path}/${file.name}');
+
+    return File(file.path!).copy(newfile.path);
+  }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/track.json');
+  }
+
+  void read() async {
+    _filePath = await _localFile;
+
+    // 0. Check whether the _file exists
+    _filexists = await _filePath!.exists();
+
+    visible = _filexists;
+    print('0. File exists? $_filexists');
+  }
+
   @override
   void initState() {
     super.initState();
-    package();
 
+    package();
+    read();
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SizedBox(
         height: height,
         child: Stack(
           children: [
             Positioned(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.50,
+                height: MediaQuery.of(context).size.height * 0.50,
                 child: SigninContainer()),
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        SizedBox(height: height * .55),
-                        Text(
-                          "UNGGAH FILE KONFIGURASI ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w900, fontSize: 20),
-                        ),
-                        Text(
-                          "File konfiguras dapat diperoleh dari operator masing-masing ",
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 50),
-                        _submitButton(),
+              SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          SizedBox(height: height * .55),
+                          Text(
+                            "UNGGAH FILE KONFIGURASI ",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w900, fontSize: 20),
+                          ),
+                          Text(
+                            "File konfiguras dapat diperoleh dari operator masing-masing ",
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 50),
+                          _submitButton(),
+                          _nextButton(),
 
-                        SizedBox(height: 20),
-                        Text("File :"),
+                          SizedBox(height: 20),
 
 
-                        // ListView.builder(itemBuilder: (context, index){
-                        //        return Text(result?.files[index].name ?? "");
-                        // }),
-                        SizedBox(
-                          height: 100,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                text: "SI-ABON",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w900),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: '  offline',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.blue)),
-                                ],
+
+                          // ListView.builder(itemBuilder: (context, index){
+                          //        return Text(result?.files[index].name ?? "");
+                          // }),
+                          SizedBox(
+                            height: 100,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  text: "SI-ABON",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w900),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: '  offline',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.blue)),
+                                  ],
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            Text("Version : $_versionapp")
-                          ],
-                        ),
-                        SizedBox(height: height * .050),
-                      ],
+                              Text("Version : $_versionapp")
+                            ],
+                          ),
+                          SizedBox(height: height * .050),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+
           ],
         ),
       ),
