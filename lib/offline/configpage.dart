@@ -139,7 +139,7 @@ class _ConfigPageState extends State<ConfigPage> {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/track.json');
+    return File('$path/config.json');
   }
 
   void read() async {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:absensi/common/my_color.dart';
@@ -19,6 +20,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
 
 // import 'navigasi.dart';
 
@@ -43,47 +46,38 @@ class _HomePageState extends State<HomePage> {
   String? _deviceId1;
   bool? buttondisabled = false;
   bool? buttonvisible = false;
-  Future<void> _getId() async {
 
+  Future<void> _getId() async {
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
         var build = await deviceInfoPlugin.androidInfo;
 
         setState(() {
-
-
           _deviceId = build.version.release;
-
 
           var parts = _deviceId!.split('.');
           var prefix = parts[0].trim();
           var myInt = int.parse(prefix);
           assert(myInt is int);
-          if(myInt <= 6){
+          if (myInt <= 6) {
             buttondisabled = false;
-          }
-          else
-          {
+          } else {
             buttondisabled = true;
           }
-
-
-
         });
-
       } else if (Platform.isIOS) {
         var data = await deviceInfoPlugin.iosInfo;
 
         setState(() {
           _deviceId = data.identifierForVendor!;
         });
-
       }
     } on PlatformException {
       Fluttertoast.showToast(msg: "error");
     }
   }
+
   Future CheckUserConeection() async {
     try {
       final result = await InternetAddress.lookup('absensi.gorutkab.go.id');
@@ -191,7 +185,11 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                       maintainState: false));
                             },
-                            child: const Text('Selengkapnya',style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),),
+                            child: const Text(
+                              'Selengkapnya',
+                              style: TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ),
                       ],
@@ -215,76 +213,65 @@ class _HomePageState extends State<HomePage> {
     kegiatan.kegiatan().then((value) {
       List<dynamic> body = value!["body"];
 
-
-     body.forEach((element) {
-       String Judul = element!["judul"].toString();
-       String url = element!["url_pdf"].toString();
-       String tst = element!["tst"].toString();
-       _kegiatan.add(
-
-           Container(
-             width: 40,
-             height: 110,
-             color: MyColor.orange1,
-             child: GestureDetector(
-               onTap: () {
-                 if (url != ''){
-                   Navigator.of(context, rootNavigator: false)
-                       .push(MaterialPageRoute(
-                       builder: (context) => PdfView(
-                         value: "$url",
-                       ),
-                       maintainState: false));
-                 }
-
-               },
-               child: Card(
-                 shape: RoundedRectangleBorder(
-                   borderRadius: BorderRadius.all(
-                     Radius.circular(9),
-                   ),
-                 ),
-                 child: Column(
-                   children: [
-                     SizedBox(
-                       height: 10,
-                     ),
-                     Padding(
-                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                       child: Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Text("$tst"),
-                         ],
-                       ),
-                     ),
-                     Column(
-                       children: [
-                         SizedBox(
-                           height: 20,
-                         ),
-                         Text(
-                           "$Judul",
-                           style: TextStyle(fontWeight: FontWeight.w500),
-                         ),
-                       ],
-                     ),
-                   ],
-                 ),
-               ),
-             ),
-           )
-       );
-     });
-
-
-
+      body.forEach((element) {
+        String Judul = element!["judul"].toString();
+        String url = element!["url_pdf"].toString();
+        String tst = element!["tst"].toString();
+        _kegiatan.add(Container(
+          width: 40,
+          height: 110,
+          color: MyColor.orange1,
+          child: GestureDetector(
+            onTap: () {
+              if (url != '') {
+                Navigator.of(context, rootNavigator: false)
+                    .push(MaterialPageRoute(
+                        builder: (context) => PdfView(
+                              value: "$url",
+                            ),
+                        maintainState: false));
+              }
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(9),
+                ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("$tst"),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "$Judul",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+      });
 
       setState(() {
         tempkegiatan = _kegiatan;
-
-
-
       });
     });
   }
@@ -321,14 +308,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _statusabsenteman() {
-    var statusabsentmn =  HakAkses();
+    var statusabsentmn = HakAkses();
     statusabsentmn.statusabsenteman().then((value) {
-
       setState(() {
         _buttonteman = value!;
       });
     });
   }
+
   Future _refresh() async {
     await Future.delayed(Duration(seconds: 2));
     setState(() {
@@ -337,6 +324,46 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  String? nik;
+  String? Kduser;
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/config.json');
+  }
+
+  Future<void> readJson() async {
+    final path = await _localPath;
+
+    final storage = GetStorage();
+    final file = File('$path/config.json');
+    final String response = await file.readAsString();
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String decoded = stringToBase64.decode(response);
+    String decoded2 = stringToBase64.decode(decoded);
+    final data = await json.decode(decoded2);
+
+
+    setState(() {
+      nik = data["nik"];
+      Kduser = data["kdUser"];
+      bool isLogin = storage.hasData('kdUser');
+      if (!isLogin){
+          storage.write("nik", nik);
+          storage.write("kdUser", Kduser);
+      }
+    });
+  }
+
+  void cekstorage() async{
+
+  }
 
   @override
   void initState() {
@@ -348,12 +375,8 @@ class _HomePageState extends State<HomePage> {
     tampildataKegiatan();
     CheckUserConeection();
     _getId();
-
-
-
-
+    readJson();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -393,7 +416,8 @@ class _HomePageState extends State<HomePage> {
                       children: <Widget>[
                         Container(
                           height: 100,
-                          child: ActiveConnection ? ListView(
+                          child: ActiveConnection
+                              ? ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: <Widget>[
                                     Visibility(
@@ -591,7 +615,9 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     Visibility(
-                                      visible: buttondisabled! ? visibilityQrCode : buttonvisible!,
+                                      visible: buttondisabled!
+                                          ? visibilityQrCode
+                                          : buttonvisible!,
                                       child: GestureDetector(
                                         onTap: () {
                                           Navigator.of(context,
@@ -637,71 +663,68 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                     ),
-
                                   ],
-                                ) :ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              Visibility(
-                                visible: true,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context,
-                                        rootNavigator: false)
-                                        .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                        const AbsenPageOffline(),
-                                        maintainState: false));
-                                  },
-                                  child: Ink(
-                                    height: 100,
-                                    width: 100,
-                                    child: Card(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(9),
+                                )
+                              : ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: <Widget>[
+                                    Visibility(
+                                      visible: true,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.of(context,
+                                                  rootNavigator: false)
+                                              .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const AbsenPageOffline(),
+                                                  maintainState: false));
+                                        },
+                                        child: Ink(
+                                          height: 100,
+                                          width: 100,
+                                          child: Card(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(9),
+                                              ),
+                                            ),
+                                            color: Colors.orange,
+                                            elevation: 8,
+                                            shadowColor: Colors.white,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(
+                                                  FluentIcons
+                                                      .calendar_day_24_filled,
+                                                  size: 30,
+                                                  color: Colors.white,
+                                                ),
+                                                Text(
+                                                  '\nAbsensi',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      color: Colors.orange,
-                                      elevation: 8,
-                                      shadowColor: Colors.white,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(
-                                            FluentIcons
-                                                .calendar_day_24_filled,
-                                            size: 30,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            '\nAbsensi',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white,
-                                                fontWeight:
-                                                FontWeight.w500),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ),
-
-
-                            ],
-                          ) ,
-
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    decoration:  BoxDecoration(
+                    decoration: BoxDecoration(
                       color: ActiveConnection ? MyColor.orange1 : Colors.orange,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(12),
@@ -726,53 +749,53 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 10),
                         Container(
                           height: 150,
-                          child: ActiveConnection ?
-                          ListView(
-                              scrollDirection: Axis.vertical,
-                              children:  tempkegiatan ,
-                             )
-                          : ListView(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 110,
-                                  color: ActiveConnection ? MyColor.orange1 : Colors.orange,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                    },
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(9),
+                          child: ActiveConnection
+                              ? ListView(
+                                  scrollDirection: Axis.vertical,
+                                  children: tempkegiatan,
+                                )
+                              : ListView(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  scrollDirection: Axis.vertical,
+                                  children: [
+                                      Container(
+                                        width: 40,
+                                        height: 110,
+                                        color: ActiveConnection
+                                            ? MyColor.orange1
+                                            : Colors.orange,
+                                        child: GestureDetector(
+                                          onTap: () {},
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(9),
+                                              ),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 30,
+                                                    ),
+                                                    Text(
+                                                      "Tidak ada data pemberitahuan",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-
-                                          Column(
-                                            children: [
-                                              SizedBox(
-                                                height: 30,
-                                              ),
-                                              Text(
-                                                "Tidak Ada Data Pemberitahuan",
-                                                style: TextStyle(fontWeight: FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-
-                              ]),
+                                    ]),
                         ),
                         const SizedBox(height: 10),
                         const Text(

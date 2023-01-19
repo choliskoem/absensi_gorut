@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:absensi/offline/configpage.dart';
@@ -8,6 +9,7 @@ import 'package:absensi/pages/splashscreen.dart';
 import 'package:absensi/pages/splashscreennav.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -65,8 +67,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/track.json');
+    return File('$path/config.json');
   }
+
+
 
   void read() async {
     _filePath = await _localFile;
