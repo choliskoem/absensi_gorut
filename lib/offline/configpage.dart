@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:absensi/main.dart';
+import 'package:absensi/offline/absen_page_offline.dart';
 import 'package:absensi/offline/widget/configcontainer.dart';
+import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/pages/splashscreennav.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +30,33 @@ class _ConfigPageState extends State<ConfigPage> {
 
   bool _filexists = false;
 
+  String? status = "" ;
+  bool ActiveConnection = false;
+  Future checkstatusconfig() async {
+    String _status = "";
+    final path = await _localPath;
+    try{
+      final file = File('$path/config.json');
+      final String response = await file.readAsString();
+      Codec<String, String> stringToBase64 = utf8.fuse(base64);
+      String decoded = stringToBase64.decode(response);
+      String decoded2 = stringToBase64.decode(decoded);
+      final data = await json.decode(decoded2);
+      _status = data["status"] ;
 
+
+
+      setState(() {
+        status = _status;
+
+      });
+    }catch (e){
+      status ="online";
+    }
+
+
+
+  }
 
   void package() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -41,7 +70,22 @@ class _ConfigPageState extends State<ConfigPage> {
       _versionapp = versionapp;
     });
   }
-
+  Future CheckUserConeection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          ActiveConnection = true;
+          // Fluttertoast.showToast(msg: "Online");
+        });
+      }
+    } on SocketException catch (_) {
+      setState(() {
+        ActiveConnection = false;
+        // Fluttertoast.showToast(msg: "Offline");
+      });
+    }
+  }
   Widget _submitButton() {
     return Visibility(
       visible: !visible,
@@ -96,8 +140,17 @@ class _ConfigPageState extends State<ConfigPage> {
         alignment: Alignment.centerRight,
         child: InkWell(
           onTap: () async {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (BuildContext context) => SplashScreenNav()));
+            await CheckUserConeection();
+            await checkstatusconfig();
+            if(ActiveConnection == true && status == "online") {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
+            }else {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => AbsenPageOffline()));
+              }
+
           },
           child:
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -158,6 +211,8 @@ class _ConfigPageState extends State<ConfigPage> {
 
     package();
     read();
+    CheckUserConeection();
+    checkstatusconfig();
   }
 
   @override

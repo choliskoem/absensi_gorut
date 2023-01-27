@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:absensi/offline/absen_page_offline.dart';
 import 'package:absensi/offline/configpage.dart';
 import 'package:absensi/offline/widget/splashscreenoff.dart';
 import 'package:absensi/pages/HttpOverrides.dart';
 import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/pages/splashscreen.dart';
 import 'package:absensi/pages/splashscreennav.dart';
+import 'package:absensi/pages/splashscreennavoff.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,25 +43,65 @@ class _MyAppState extends State<MyApp> {
   bool ActiveConnection = false;
   bool cekconfig = false;
   File? _filePath;
-
   bool _filexists = false;
+ String? _check;
 
+  String? status = "" ;
+
+  void checkstatusconfig() async {
+    String _status = "";
+    final path = await _localPath;
+    try{
+      final file = File('$path/config.json');
+      final String response = await file.readAsString();
+      Codec<String, String> stringToBase64 = utf8.fuse(base64);
+      String decoded = stringToBase64.decode(response);
+      String decoded2 = stringToBase64.decode(decoded);
+      final data = await json.decode(decoded2);
+      _status = data["status"] ;
+
+
+
+      setState(() {
+        status = _status;
+
+      });
+    }catch (e){
+      status ="online";
+    }
+
+
+
+  }
   Future CheckUserConeection() async {
     try {
+
+
       final result = await InternetAddress.lookup('absensi.gorutkab.go.id');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty ) {
+
+
+
         setState(() {
           ActiveConnection = true;
+
+
           // Fluttertoast.showToast(msg: "Online");
         });
       }
     } on SocketException catch (_) {
       setState(() {
         ActiveConnection = false;
+
+
         // Fluttertoast.showToast(msg: "Offline");
       });
     }
+
+
   }
+
+
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -70,8 +113,6 @@ class _MyAppState extends State<MyApp> {
     return File('$path/config.json');
   }
 
-
-
   void read() async {
     _filePath = await _localFile;
 
@@ -79,35 +120,51 @@ class _MyAppState extends State<MyApp> {
     _filexists = await _filePath!.exists();
 
     print('0. File exists? $_filexists');
+
+
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     CheckUserConeection();
     read();
+    checkstatusconfig();
+
+
+
+
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
+   print("Aktif : $ActiveConnection");
+   print("status : $status ");
+
+
 
     bool isLogin = box.hasData('kdUser');
+    bool isonline = status == "online";
+    bool isoffline = status == "offline";
 
     return GetMaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: ActiveConnection
-            ? isLogin
-                ? SplashScreenNav()
-                : SplashScreen()
-            : _filexists
-                ? SplashScreenNav()
-                : SplashScreenoff(),
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: ActiveConnection && isonline
+          ? isLogin
+              ? SplashScreenNav()
+              : SplashScreen()
+          : _filexists
+              ? SplashScreenNavOff()
+              : SplashScreenoff(),
     );
   }
 }
