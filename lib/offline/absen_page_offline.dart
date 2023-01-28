@@ -1,10 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:absensi/common/my_color.dart';
 import 'package:absensi/common/my_typhography.dart';
 import 'package:absensi/models/status_absen/status_absen_body.dart';
 import 'package:absensi/offline/absen_harian_offline.dart';
+import 'package:absensi/offline/configpage.dart';
 import 'package:absensi/pages/absen-sakit.dart';
+import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/pages/qrcode.dart';
 import 'package:absensi/pages/tugasluar.dart';
 import 'package:absensi/services/auth/biodata_service.dart';
@@ -17,8 +19,12 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+
+const String kFileName = 'rekapan.json';
 
 class AbsenPageOffline extends StatefulWidget {
   const AbsenPageOffline({Key? key}) : super(key: key);
@@ -29,15 +35,95 @@ class AbsenPageOffline extends StatefulWidget {
 
 class _AbsenPageOfflineState extends State<AbsenPageOffline> {
   AnimationController? controller;
+  File? _filePath;
+  String? _versionapp;
+  String? status;
+  String? day;
+  String? nik;
+  String? Kduser;
+  String? UnitKerja;
+  String? Nama;
+  String? month;
+  String? year;
+  String? hour;
+  String? minute;
+  bool _filexists = false;
+  bool? filexists;
+   List<String> splitted = [''];
+  List<String> split_= [''];
+
+  String? id_jenis;
+
+  Future checkstatusconfig() async {
+    String _status = "";
+    final path = await _localPath;
+    try {
+      final file = File('$path/config.json');
+      final String response = await file.readAsString();
+      Codec<String, String> stringToBase64 = utf8.fuse(base64);
+      String decoded = stringToBase64.decode(response);
+      String decoded2 = stringToBase64.decode(decoded);
+      final data = await json.decode(decoded2);
+      _status = data["status"];
+
+      setState(() {
+        status = _status;
+      });
+    } catch (e) {
+      status = "online";
+    }
+  }
 
   Future _refresh() async {
+    _filePath = await _localFile;
+    // 0. Check whether the _file exists
+    _filexists = await _filePath!.exists();
     await Future.delayed(Duration(seconds: 2));
+    await CheckUserConeection();
+    await checkstatusconfig();
     setState(() {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+      if (ActiveConnection == true && status == "online") {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
+      } else {
+        if (_filexists == false && ActiveConnection == false) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => ConfigPage()));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => super.widget));
+        }
+      }
+
+      // if(ActiveConnection == true){
+      //   Navigator.pushReplacement(context,
+      //       MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
+      // }
+      // else{
+      //   Navigator.pushReplacement(context,
+      //       MaterialPageRoute(builder: (BuildContext context) => super.widget));
+      // }
     });
   }
-  String? _versionapp;
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/config.json');
+  }
+
+  Future<File> get localfilerekap async {
+    final path = await _localPath;
+    return File('$path/$kFileName');
+  }
 
   void package() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -52,59 +138,46 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
     });
   }
 
-  String? day;
+  Future<void> readJson() async {
+    final path = await _localPath;
 
-  String? month;
+    final storage = GetStorage();
+    final file = File('$path/config.json');
+    final String response = await file.readAsString();
 
-  String? year;
-  String? hour;
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String decoded = stringToBase64.decode(response);
+    String decoded2 = stringToBase64.decode(decoded);
+    final data = await json.decode(decoded2);
 
-  String? minute;
+    setState(() {
+      nik = data["nik"];
+      Kduser = data["kdUser"];
+      Nama = data["nama"];
+      UnitKerja = data["unitKerja"];
+      bool isLogin = storage.hasData('kdUser');
+      if (!isLogin) {
+        storage.write("nik", nik);
+        storage.write("kdUser", Kduser);
+      }
+    });
+  }
 
   final box = GetStorage();
   bool? buttonspt = true;
   bool? spt = false;
-  bool? _isButtonDisabled = false;
-  bool? _isButtonDisabledLuar = false;
-  bool? _isButtonSakitDisabled = false;
   String? textabsen = "mohon tunggu";
   bool ActiveConnection = false;
   String _hariaktif = "0";
   String _hariefektif = "0";
   String? _presensi = '0.0';
-
   String? _deviceId;
-
+  String? _waktuu;
   bool? buttondisabled = false;
   bool? buttondisabledharian = false;
 
   bool? buttondisabledluar = false;
   bool? buttonsakitdisabled = false;
-  String? UnitKerja;
-
-  String? Nama;
-
-  void tampil() {
-    String unit;
-    String nama;
-    var bio = BiodataService();
-
-    bio.unitkerja().then((value) {
-      unit = value!['unitKerja'].toString();
-
-      setState(() {
-        UnitKerja = unit;
-      });
-    });
-
-    bio.biodata().then((value) {
-      nama = value!['namaLengkap'].toString();
-
-      setState(() {
-        Nama = nama;
-      });
-    });
-  }
 
   Future CheckUserConeection() async {
     try {
@@ -194,9 +267,7 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
       double persen = data.body!.presensi.roundToDouble();
       _presensi = persen.toString();
       textabsen = data.body!.pesanAbsen;
-      _isButtonDisabled = data.body!.statusAbsen;
-      _isButtonDisabledLuar = data.body!.statusAbsenLuar;
-      _isButtonSakitDisabled = data.body!.statusAbsenSakit;
+
     });
     // if (data.body!.statusAbsen == false){
     //  _isButtonDisabled =  false;
@@ -205,15 +276,27 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
     // }
   }
 
+  void toashabsen() async {
+    setState(() {});
+  }
+
+  void getLocation() async {
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    permission = await Geolocator.requestPermission();
+    availableCameras();
+  }
+
   void initState() {
     super.initState();
     _asyncMethod();
     CheckUserConeection();
     _getId();
-    tampil();
+    getLocation();
     kondisispt();
     time();
     package();
+    readJson();
   }
 
   @override
@@ -390,11 +473,43 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                               final cameras = await availableCameras();
                               final firstCamera = cameras.first;
 
-                              Navigator.of(context, rootNavigator: false).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          AbsenPageOff(camera: firstCamera),
+                              var _file = await localfilerekap;
+                              filexists = await _file.exists();
+
+                              if (!filexists!) {
+                                _file.create();
+                              } else {
+                                final String response = await _file.readAsString();
+                                if (!response.isEmpty) {
+                                  var objeklist =
+                                      json.decode(response)['data'] as List;
+                                  _waktuu =
+                                      objeklist[objeklist.length - 1]['waktu'];
+                                   id_jenis =    objeklist[objeklist.length - 1]['idjenis'];
+                                   splitted = _waktuu!.split(' ');
+                                  final _date = DateTime.now();
+                                  String _waktu = _date.toString();
+                                 split_ = _waktu.split(' ');
+
+                                }
+                                if (filexists!  && split_[0] == splitted[0] && id_jenis == '2') {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                      "Anda Telah Selesai Melakukan Presensi Hari ini")
+                                      .toString();
+                                } else {
+                                  Navigator.of(context, rootNavigator: false)
+                                      .push(MaterialPageRoute(
+                                      builder: (context) => AbsenPageOff(
+                                          camera: firstCamera),
                                       maintainState: false));
+                                }
+
+
+                              }
+                              setState(() {
+
+                              });
                             },
                             color: Colors.orange,
                             centerText: Padding(
@@ -437,44 +552,13 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 50,),
+                        SizedBox(
+                          height: 50,
+                        ),
                         Container(
                           child: Text('Version : $_versionapp'),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 100),
-                        //   child: Row(
-                        //     children: [
-                        //       Visibility(
-                        //           visible: buttonsakitdisabled!,
-                        //           child: Text("Absen Sakit")),
-                        //     ],
-                        //   ),
-                        // ),
-                        // Visibility(
-                        //   visible: buttonsakitdisabled!,
-                        //   child: MyButton(
-                        //     onTap: () async {
-                        //       if (_isButtonSakitDisabled!) {
-                        //         final cameras = await availableCameras();
-                        //         await availableCameras().then((value) =>
-                        //             Navigator.push(
-                        //                 context,
-                        //                 MaterialPageRoute(
-                        //                     builder: (_) =>
-                        //                         AbsenSakit(camera: cameras))));
-                        //       }
-                        //     },
-                        //     color: _isButtonSakitDisabled!
-                        //         ? MyColor.orange1
-                        //         : Colors.grey,
-                        //     centerText: Padding(
-                        //       padding: const EdgeInsets.symmetric(
-                        //           vertical: 15, horizontal: 82),
-                        //       child: Text("Sakit"),
-                        //     ),
-                        //   ),
-                        // ),
+
                       ],
                     ),
                   ),

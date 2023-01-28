@@ -4,15 +4,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewExample extends StatefulWidget {
+class MapsPage extends StatefulWidget {
   final String value ;
-  WebViewExample({Key? key, required this.value,}) : super(key: key);
+  MapsPage({Key? key, required this.value,}) : super(key: key);
 
   @override
-  WebViewExampleState createState() => WebViewExampleState();
+  MapsPageState createState() => MapsPageState();
 }
 
-class WebViewExampleState extends State<WebViewExample> {
+class MapsPageState extends State<MapsPage> {
 
   @override
   void initState() {
@@ -26,6 +26,8 @@ class WebViewExampleState extends State<WebViewExample> {
     return  SafeArea(
       child: WebView(
         initialUrl: widget.value ,
+        javascriptMode: JavascriptMode.unrestricted,
+
       ),
     );
   }

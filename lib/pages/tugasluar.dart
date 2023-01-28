@@ -64,24 +64,9 @@ class _TugasLuarState extends State<TugasLuar> {
     super.initState();
     _cameraController =
         CameraController(widget.camera[1], ResolutionPreset.medium);
-    _initializeControllerFuture = _cameraController.initialize().then((_) {
-      if (!mounted) {
-        return;
+    _initializeControllerFuture = _cameraController.initialize();
       }
-      setState(() {});
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            // Handle access errors here.
-            break;
-          default:
-            // Handle other errors here.
-            break;
-        }
-      }
-    });
-  }
+
 
   @override
   void dispose() {

@@ -1,12 +1,17 @@
-import 'package:absensi/pages/halaman_login.dart';
-import 'package:absensi/pages/login_page.dart';
+import 'package:absensi/offline/absen_page_offline.dart';
+import 'package:absensi/pages/navigasi.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-void main() => runApp(SplashScreen());
 
-class SplashScreen extends StatelessWidget {
+
+class SplashScreenNavOff extends StatefulWidget {
+  @override
+  State<SplashScreenNavOff> createState() => _SplashScreenNavOffState();
+}
+
+class _SplashScreenNavOffState extends State<SplashScreenNavOff> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,13 +19,12 @@ class SplashScreen extends StatelessWidget {
             duration: 3000,
             splash: Image(
               image: AssetImage('assets/images/group.png'),
-
+              height: 200,
             ),
             splashIconSize: 150,
-            nextScreen: LoginPage(),
+            nextScreen: AbsenPageOffline(),
             splashTransition: SplashTransition.fadeTransition,
             pageTransitionType: PageTransitionType.topToBottom,
             backgroundColor: Colors.white));
-
   }
 }

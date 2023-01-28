@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:absensi/webview/maps.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:absensi/common/my_color.dart';
 import 'package:absensi/common/my_typhography.dart';
@@ -159,8 +161,9 @@ class _AbsenPageState extends State<AbsenPage> {
         });
       } else if (Platform.isIOS) {
         var data = await deviceInfoPlugin.iosInfo;
+        buttondisabled = true;
         buttondisabledharian = buttondisabled! && !spt!;
-        buttondisabledluar = !spt !;
+        buttondisabledluar = !spt!;
         buttonsakitdisabled = !spt!;
 
         setState(() {
@@ -367,6 +370,37 @@ class _AbsenPageState extends State<AbsenPage> {
                           const SizedBox(height: 15),
                           const Text('Presensi',
                               style: TextStyle(fontWeight: FontWeight.w700)),
+                          Row(
+                             mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: ElevatedButton(
+
+                                  onPressed: () async{
+                                    var position = await Geolocator.getCurrentPosition(
+                                        desiredAccuracy: LocationAccuracy.high);
+                                    String lat = position.latitude.toString();
+                                    String lot = position.longitude.toString();
+                                    String url = "https://maps.google.com/?q=$lat,$lot" ;
+
+                                    Navigator.of(context, rootNavigator: false)
+                                        .push(MaterialPageRoute(
+                                        builder: (context) => MapsPage(
+                                          value: url,
+                                        ),
+                                        maintainState: false));
+
+
+                                  }, child: Icon(Icons.location_on), style: ElevatedButton.styleFrom(
+                                primary: MyColor.orange1,
+                                shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                    ),
+                  ),),
+                              )
+                            ],
+                          )
                         ],
                       ),
                     ),
