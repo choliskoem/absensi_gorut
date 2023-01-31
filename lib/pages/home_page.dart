@@ -24,8 +24,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 
-// import 'navigasi.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -34,7 +32,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  List<Widget> widgets = [];
+  List<Widget> widgets2 = [];
+  List<Widget> tempkegiatan = [];
+  String? _deviceId;
   String? nik;
   String? Kduser;
   String? status;
@@ -45,14 +46,10 @@ class _HomePageState extends State<HomePage> {
   bool visibilitylokasi = false;
   bool visibilityQrCode = false;
   bool ActiveConnection = false;
-  List<Widget> widgets = [];
-  List<Widget> widgets2 = [];
-  List<Widget> tempkegiatan = [];
   bool datakegiatan = true;
-  String? _deviceId;
-  String? _deviceId1;
   bool? buttondisabled = false;
   bool? buttonvisible = false;
+  bool? Ada_gambar = true;
 
   Future<void> _getId() async {
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -85,15 +82,30 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void tampildataBerita() {
+  void tampildataBerita() async {
     List<Widget> tempWidget = [];
     var berita = Berita();
 
     berita.berita().then((value) {
       List<dynamic> body = value!["body"];
 
-      body.forEach((element) {
+      body.forEach((element) async {
         String UrlGambar = element!["url_gambar"].toString();
+
+        // try {
+        //   final result = await InternetAddress.lookup(UrlGambar);
+        //   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        //     setState(() {
+        //      Ada_gambar = true ;
+        //       // Fluttertoast.showToast(msg: "Online");
+        //     });
+        //   }
+        // } on SocketException catch (_) {
+        //   setState(() {
+        //      Ada_gambar = false;
+        //     // Fluttertoast.showToast(msg: "$ActiveConnection");
+        //   });
+        // }
         String Waktu = element!["waktu"].toString();
         String Deskripsi = element!["deskripsi"].toString();
         String Judul = element!["judul"].toString();
@@ -113,12 +125,14 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
-                  Image.network(
-                    '$UrlGambar',
-                    fit: BoxFit.fill,
-                    width: 250,
-                    height: 110,
-                  ),
+                  Ada_gambar!
+                      ? Image.network(
+                          '$UrlGambar',
+                          fit: BoxFit.fill,
+                          width: 250,
+                          height: 110,
+                        )
+                      : Container(),
                   SizedBox(
                     height: 5,
                   ),
@@ -311,32 +325,26 @@ class _HomePageState extends State<HomePage> {
     // 0. Check whether the _file exists
     _filexists = await _filePath!.exists();
     await Future.delayed(Duration(seconds: 2));
-    await  CheckUserConeection();
+    await CheckUserConeection();
     setState(() {
-
-      if(ActiveConnection == true) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
-      }else{
-        if(_filexists == false && ActiveConnection == false) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (BuildContext context) => ConfigPage()));
-        }else{
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (BuildContext context) => AbsenPageOffline()));
+      if (ActiveConnection == true) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
+      } else {
+        if (_filexists == false && ActiveConnection == false) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => ConfigPage()));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AbsenPageOffline()));
         }
-
       }
-
-
-
-
-
     });
   }
-
-
-
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -369,7 +377,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future CheckUserConeection() async {
-
     try {
       final result = await InternetAddress.lookup('absensi.gorutkab.go.id');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -409,7 +416,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -422,7 +428,6 @@ class _HomePageState extends State<HomePage> {
     checkstatusconfig();
     _getId();
     readJson();
-
   }
 
   @override
@@ -463,319 +468,308 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: <Widget>[
                         Container(
-                          height: 100,
-                          child:
-                               ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: <Widget>[
-                                    Visibility(
-                                      visible: visibility,
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: false)
-                                              .push(MaterialPageRoute(
+                            height: 100,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                Visibility(
+                                  visible: visibility,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context,
+                                              rootNavigator: false)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AbsenPage(),
+                                              maintainState: false));
+                                    },
+                                    child: Ink(
+                                      height: 100,
+                                      width: 100,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(9),
+                                          ),
+                                        ),
+                                        color: MyColor.orange1,
+                                        elevation: 8,
+                                        shadowColor: Colors.white,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              FluentIcons
+                                                  .calendar_day_24_filled,
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              '\nAbsensi',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: visibility,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context,
+                                              rootNavigator: false)
+                                          .push(
+                                              MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const AbsenPage(),
+                                                      const RekapAbsen(),
                                                   maintainState: false));
-                                        },
-                                        child: Ink(
-                                          height: 100,
-                                          width: 100,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(9),
-                                              ),
-                                            ),
-                                            color: MyColor.orange1,
-                                            elevation: 8,
-                                            shadowColor: Colors.white,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(
-                                                  FluentIcons
-                                                      .calendar_day_24_filled,
-                                                  size: 30,
-                                                  color: Colors.white,
-                                                ),
-                                                Text(
-                                                  '\nAbsensi',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
+                                    },
+                                    child: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(9),
                                           ),
+                                        ),
+                                        color: MyColor.orange1,
+                                        elevation: 8,
+                                        shadowColor: Colors.white,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              FluentIcons
+                                                  .document_text_24_filled,
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              'Rekap\nAbsen',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                    Visibility(
-                                      visible: visibility,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: false)
-                                              .push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const RekapAbsen(),
-                                                      maintainState: false));
-                                        },
-                                        child: Container(
-                                          height: 100,
-                                          width: 100,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(9),
-                                              ),
-                                            ),
-                                            color: MyColor.orange1,
-                                            elevation: 8,
-                                            shadowColor: Colors.white,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(
-                                                  FluentIcons
-                                                      .document_text_24_filled,
-                                                  size: 30,
-                                                  color: Colors.white,
-                                                ),
-                                                Text(
-                                                  'Rekap\nAbsen',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: _buttonteman!,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: false)
-                                              .push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AbsenTeman(),
-                                                      maintainState: false));
-                                        },
-                                        child: Container(
-                                          height: 100,
-                                          width: 100,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(9),
-                                              ),
-                                            ),
-                                            color: MyColor.orange1,
-                                            elevation: 8,
-                                            shadowColor: Colors.white,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(
-                                                  FluentIcons
-                                                      .people_add_24_filled,
-                                                  size: 30,
-                                                  color: Colors.white,
-                                                ),
-                                                Text(
-                                                  'Absen\nTeman',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: visibilitylokasi,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: false)
-                                              .push(MaterialPageRoute(
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: _buttonteman!,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context,
+                                              rootNavigator: false)
+                                          .push(
+                                              MaterialPageRoute(
                                                   builder: (context) =>
-                                                      SetLokasi(),
+                                                      AbsenTeman(),
                                                   maintainState: false));
-                                        },
-                                        child: Container(
-                                          height: 100,
-                                          width: 100,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(9),
-                                              ),
-                                            ),
-                                            color: MyColor.orange1,
-                                            elevation: 8,
-                                            shadowColor: Colors.white,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(
-                                                  FluentIcons
-                                                      .location_20_filled,
-                                                  size: 30,
-                                                  color: Colors.white,
-                                                ),
-                                                Text(
-                                                  'Setel\nLokasi',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
+                                    },
+                                    child: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(9),
                                           ),
+                                        ),
+                                        color: MyColor.orange1,
+                                        elevation: 8,
+                                        shadowColor: Colors.white,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              FluentIcons.people_add_24_filled,
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              'Absen\nTeman',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                    Visibility(
-                                      visible: buttondisabled!
-                                          ? visibilityQrCode
-                                          : buttonvisible!,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .push(MaterialPageRoute(
-                                            builder: (context) =>
-                                                const QrCodePage(),
-                                          ));
-                                        },
-                                        child: Container(
-                                          height: 100,
-                                          width: 100,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(9),
-                                              ),
-                                            ),
-                                            color: MyColor.orange1,
-                                            elevation: 8,
-                                            shadowColor: Colors.white,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(
-                                                  FluentIcons.qr_code_24_filled,
-                                                  size: 30,
-                                                  color: Colors.white,
-                                                ),
-                                                Text(
-                                                  'Login\nQrCode',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: visibilitylokasi,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context,
+                                              rootNavigator: false)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => SetLokasi(),
+                                              maintainState: false));
+                                    },
+                                    child: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(9),
                                           ),
+                                        ),
+                                        color: MyColor.orange1,
+                                        elevation: 8,
+                                        shadowColor: Colors.white,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              FluentIcons.location_20_filled,
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              'Setel\nLokasi',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ],
-                                )
-                  //lisview offline            // : ListView(
-                              //     scrollDirection: Axis.horizontal,
-                              //     children: <Widget>[
-                              //       Visibility(
-                              //         visible: true,
-                              //         child: InkWell(
-                              //           onTap: () {
-                              //             Navigator.of(context,
-                              //                     rootNavigator: false)
-                              //                 .push(MaterialPageRoute(
-                              //                     builder: (context) =>
-                              //                         const AbsenPageOffline(),
-                              //                     maintainState: false));
-                              //           },
-                              //           child: Ink(
-                              //             height: 100,
-                              //             width: 100,
-                              //             child: Card(
-                              //               shape: const RoundedRectangleBorder(
-                              //                 borderRadius: BorderRadius.all(
-                              //                   Radius.circular(9),
-                              //                 ),
-                              //               ),
-                              //               color: Colors.orange,
-                              //               elevation: 8,
-                              //               shadowColor: Colors.white,
-                              //               child: Column(
-                              //                 mainAxisAlignment:
-                              //                     MainAxisAlignment.center,
-                              //                 children: const [
-                              //                   Icon(
-                              //                     FluentIcons
-                              //                         .calendar_day_24_filled,
-                              //                     size: 30,
-                              //                     color: Colors.white,
-                              //                   ),
-                              //                   Text(
-                              //                     '\nAbsensi',
-                              //                     style: TextStyle(
-                              //                         fontSize: 12,
-                              //                         color: Colors.white,
-                              //                         fontWeight:
-                              //                             FontWeight.w500),
-                              //                     textAlign: TextAlign.center,
-                              //                   ),
-                              //                 ],
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                        ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: buttondisabled!
+                                      ? visibilityQrCode
+                                      : buttonvisible!,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            const QrCodePage(),
+                                      ));
+                                    },
+                                    child: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(9),
+                                          ),
+                                        ),
+                                        color: MyColor.orange1,
+                                        elevation: 8,
+                                        shadowColor: Colors.white,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              FluentIcons.qr_code_24_filled,
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              'Login\nQrCode',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                            //lisview offline            // : ListView(
+                            //     scrollDirection: Axis.horizontal,
+                            //     children: <Widget>[
+                            //       Visibility(
+                            //         visible: true,
+                            //         child: InkWell(
+                            //           onTap: () {
+                            //             Navigator.of(context,
+                            //                     rootNavigator: false)
+                            //                 .push(MaterialPageRoute(
+                            //                     builder: (context) =>
+                            //                         const AbsenPageOffline(),
+                            //                     maintainState: false));
+                            //           },
+                            //           child: Ink(
+                            //             height: 100,
+                            //             width: 100,
+                            //             child: Card(
+                            //               shape: const RoundedRectangleBorder(
+                            //                 borderRadius: BorderRadius.all(
+                            //                   Radius.circular(9),
+                            //                 ),
+                            //               ),
+                            //               color: Colors.orange,
+                            //               elevation: 8,
+                            //               shadowColor: Colors.white,
+                            //               child: Column(
+                            //                 mainAxisAlignment:
+                            //                     MainAxisAlignment.center,
+                            //                 children: const [
+                            //                   Icon(
+                            //                     FluentIcons
+                            //                         .calendar_day_24_filled,
+                            //                     size: 30,
+                            //                     color: Colors.white,
+                            //                   ),
+                            //                   Text(
+                            //                     '\nAbsensi',
+                            //                     style: TextStyle(
+                            //                         fontSize: 12,
+                            //                         color: Colors.white,
+                            //                         fontWeight:
+                            //                             FontWeight.w500),
+                            //                     textAlign: TextAlign.center,
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color:
-                           MyColor.orange1,
-                          // : Colors.orange,
+                      color: MyColor.orange1,
+                      // : Colors.orange,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(12),
                         topRight: Radius.circular(12),
@@ -798,54 +792,54 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 10),
                         Container(
-                          height: 150,
-                          child: ListView(
-                                  scrollDirection: Axis.vertical,
-                                  children: tempkegiatan,
-                                )
-                              // : ListView(
-                              //     padding: EdgeInsets.symmetric(vertical: 10),
-                              //     scrollDirection: Axis.vertical,
-                              //     children: [
-                              //         Container(
-                              //           width: 40,
-                              //           height: 110,
-                              //           color: ActiveConnection && isonline
-                              //               ? MyColor.orange1
-                              //               : Colors.orange,
-                              //           child: GestureDetector(
-                              //             onTap: () {},
-                              //             child: Card(
-                              //               shape: RoundedRectangleBorder(
-                              //                 borderRadius: BorderRadius.all(
-                              //                   Radius.circular(9),
-                              //                 ),
-                              //               ),
-                              //               child: Column(
-                              //                 children: [
-                              //                   SizedBox(
-                              //                     height: 10,
-                              //                   ),
-                              //                   Column(
-                              //                     children: [
-                              //                       SizedBox(
-                              //                         height: 30,
-                              //                       ),
-                              //                       Text(
-                              //                         "Tidak ada data pemberitahuan",
-                              //                         style: TextStyle(
-                              //                             fontWeight:
-                              //                                 FontWeight.w500),
-                              //                       ),
-                              //                     ],
-                              //                   ),
-                              //                 ],
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ]),
-                        ),
+                            height: 150,
+                            child: ListView(
+                              scrollDirection: Axis.vertical,
+                              children: tempkegiatan,
+                            )
+                            // : ListView(
+                            //     padding: EdgeInsets.symmetric(vertical: 10),
+                            //     scrollDirection: Axis.vertical,
+                            //     children: [
+                            //         Container(
+                            //           width: 40,
+                            //           height: 110,
+                            //           color: ActiveConnection && isonline
+                            //               ? MyColor.orange1
+                            //               : Colors.orange,
+                            //           child: GestureDetector(
+                            //             onTap: () {},
+                            //             child: Card(
+                            //               shape: RoundedRectangleBorder(
+                            //                 borderRadius: BorderRadius.all(
+                            //                   Radius.circular(9),
+                            //                 ),
+                            //               ),
+                            //               child: Column(
+                            //                 children: [
+                            //                   SizedBox(
+                            //                     height: 10,
+                            //                   ),
+                            //                   Column(
+                            //                     children: [
+                            //                       SizedBox(
+                            //                         height: 30,
+                            //                       ),
+                            //                       Text(
+                            //                         "Tidak ada data pemberitahuan",
+                            //                         style: TextStyle(
+                            //                             fontWeight:
+                            //                                 FontWeight.w500),
+                            //                       ),
+                            //                     ],
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ]),
+                            ),
                         const SizedBox(height: 10),
                         const Text(
                           'Berita',
@@ -874,25 +868,24 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: <Widget>[
                         Container(
-                          height: 250,
-                          child:
-                               ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: widgets)
-                              // : ListView(
-                              //     shrinkWrap: true,
-                              //     scrollDirection: Axis.horizontal,
-                              //     padding:
-                              //         EdgeInsets.symmetric(horizontal: 134),
-                              //     children: [
-                              //       Center(
-                              //           child: Text(
-                              //         "Tidak ada data berita",
-                              //         textAlign: TextAlign.center,
-                              //       ))
-                              //     ],
-                              //   ),
-                        ),
+                            height: 250,
+                            child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: widgets)
+                            // : ListView(
+                            //     shrinkWrap: true,
+                            //     scrollDirection: Axis.horizontal,
+                            //     padding:
+                            //         EdgeInsets.symmetric(horizontal: 134),
+                            //     children: [
+                            //       Center(
+                            //           child: Text(
+                            //         "Tidak ada data berita",
+                            //         textAlign: TextAlign.center,
+                            //       ))
+                            //     ],
+                            //   ),
+                            ),
                       ],
                     ),
                   ),

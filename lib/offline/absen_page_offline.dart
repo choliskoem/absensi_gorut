@@ -35,7 +35,23 @@ class AbsenPageOffline extends StatefulWidget {
 
 class _AbsenPageOfflineState extends State<AbsenPageOffline> {
   AnimationController? controller;
+  final box = GetStorage();
   File? _filePath;
+  bool ActiveConnection = false;
+  bool _filexists = false;
+  bool? filexists;
+  bool? buttonspt = true;
+  bool? buttondisabled = false;
+  bool? buttondisabledharian = false;
+  bool? buttondisabledluar = false;
+  bool? buttonsakitdisabled = false;
+  bool? spt = false;
+  String _hariaktif = "0";
+  String _hariefektif = "0";
+  String? textabsen = "mohon tunggu";
+  String? _presensi = '0.0';
+  String? _deviceId;
+  String? _waktuu;
   String? _versionapp;
   String? status;
   String? day;
@@ -47,12 +63,9 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
   String? year;
   String? hour;
   String? minute;
-  bool _filexists = false;
-  bool? filexists;
-   List<String> splitted = [''];
-  List<String> split_= [''];
-
   String? id_jenis;
+  List<String> splitted = [''];
+  List<String> split_ = [''];
 
   Future checkstatusconfig() async {
     String _status = "";
@@ -163,22 +176,6 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
     });
   }
 
-  final box = GetStorage();
-  bool? buttonspt = true;
-  bool? spt = false;
-  String? textabsen = "mohon tunggu";
-  bool ActiveConnection = false;
-  String _hariaktif = "0";
-  String _hariefektif = "0";
-  String? _presensi = '0.0';
-  String? _deviceId;
-  String? _waktuu;
-  bool? buttondisabled = false;
-  bool? buttondisabledharian = false;
-
-  bool? buttondisabledluar = false;
-  bool? buttonsakitdisabled = false;
-
   Future CheckUserConeection() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -193,46 +190,6 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
         ActiveConnection = false;
         // Fluttertoast.showToast(msg: "Offline");
       });
-    }
-  }
-
-  Future<void> _getId() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    try {
-      if (Platform.isAndroid) {
-        var build = await deviceInfoPlugin.androidInfo;
-
-        setState(() {
-          _deviceId = build.version.release;
-
-          var parts = _deviceId!.split('.');
-          var prefix = parts[0].trim();
-          var myInt = int.parse(prefix);
-          assert(myInt is int);
-
-          buttondisabled = !(myInt <= 6);
-
-          buttondisabledharian = buttondisabled! && !spt!;
-          buttondisabledluar = !spt!;
-          buttonsakitdisabled = !spt!;
-        });
-      } else if (Platform.isIOS) {
-        var data = await deviceInfoPlugin.iosInfo;
-
-        setState(() {
-          _deviceId = data.identifierForVendor!;
-        });
-      }
-    } on PlatformException {
-      Fluttertoast.showToast(msg: "error");
-    }
-  }
-
-  Future<void> kondisispt() async {
-    if (spt == 0) {
-      buttonsakitdisabled = true;
-    } else {
-      buttonsakitdisabled = false;
     }
   }
 
@@ -252,34 +209,6 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
     });
   }
 
-  _asyncMethod() async {
-    // var service = StatusAbsenService();
-    // service.statusabsen().then((value) {
-    //   setState(() {
-    //     _isButtonDisabled = value;
-    //   });
-    // });
-    StatusAbsenBody body = StatusAbsenBody(nik: box.read("nik"));
-    final data = await StatusAbsenService.absen(body);
-    setState(() {
-      _hariaktif = data.body!.hariAktif.toString();
-      _hariefektif = data.body!.hariEfektif.toString();
-      double persen = data.body!.presensi.roundToDouble();
-      _presensi = persen.toString();
-      textabsen = data.body!.pesanAbsen;
-
-    });
-    // if (data.body!.statusAbsen == false){
-    //  _isButtonDisabled =  false;
-    // }else{
-    //   _isButtonDisabled = true;
-    // }
-  }
-
-  void toashabsen() async {
-    setState(() {});
-  }
-
   void getLocation() async {
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
@@ -289,11 +218,8 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
 
   void initState() {
     super.initState();
-    _asyncMethod();
     CheckUserConeection();
-    _getId();
     getLocation();
-    kondisispt();
     time();
     package();
     readJson();
@@ -479,37 +405,36 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                               if (!filexists!) {
                                 _file.create();
                               } else {
-                                final String response = await _file.readAsString();
+                                final String response =
+                                    await _file.readAsString();
                                 if (!response.isEmpty) {
                                   var objeklist =
                                       json.decode(response)['data'] as List;
                                   _waktuu =
                                       objeklist[objeklist.length - 1]['waktu'];
-                                   id_jenis =    objeklist[objeklist.length - 1]['idjenis'];
-                                   splitted = _waktuu!.split(' ');
+                                  id_jenis = objeklist[objeklist.length - 1]
+                                      ['idjenis'];
+                                  splitted = _waktuu!.split(' ');
                                   final _date = DateTime.now();
                                   String _waktu = _date.toString();
-                                 split_ = _waktu.split(' ');
-
+                                  split_ = _waktu.split(' ');
                                 }
-                                if (filexists!  && split_[0] == splitted[0] && id_jenis == '2') {
+                                if (filexists! &&
+                                    split_[0] == splitted[0] &&
+                                    id_jenis == '2') {
                                   Fluttertoast.showToast(
-                                      msg:
-                                      "Anda Telah Selesai Melakukan Presensi Hari ini")
+                                          msg:
+                                              "Anda Telah Selesai Melakukan Presensi Hari ini")
                                       .toString();
                                 } else {
                                   Navigator.of(context, rootNavigator: false)
                                       .push(MaterialPageRoute(
-                                      builder: (context) => AbsenPageOff(
-                                          camera: firstCamera),
-                                      maintainState: false));
+                                          builder: (context) =>
+                                              AbsenPageOff(camera: firstCamera),
+                                          maintainState: false));
                                 }
-
-
                               }
-                              setState(() {
-
-                              });
+                              setState(() {});
                             },
                             color: Colors.orange,
                             centerText: Padding(
@@ -519,7 +444,7 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                             ),
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           height: 20,
                         ),
                         Padding(
@@ -558,7 +483,6 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                         Container(
                           child: Text('Version : $_versionapp'),
                         ),
-
                       ],
                     ),
                   ),

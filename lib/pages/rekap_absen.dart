@@ -31,6 +31,8 @@ class _RekapAbsenState extends State<RekapAbsen> {
   Icon? iconMasuk;
   IconButton? iconButtonkeluar;
   IconButton? iconButtonmasuk;
+  IconButton? iconIzin;
+  IconButton? iconSakit;
 
   @override
   void initState() {
@@ -98,6 +100,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
             },
           );
 
+
           if (element['absenKeluar'] != null) {
             switch (element['absenKeluar']['stsValid']) {
               case null:
@@ -111,7 +114,6 @@ class _RekapAbsenState extends State<RekapAbsen> {
                     // ...
                   },
                 );
-
                 break;
               case true:
                 iconButtonkeluar = IconButton(
@@ -140,6 +142,40 @@ class _RekapAbsenState extends State<RekapAbsen> {
             }
             jamKeluar = element['absenKeluar']['jam'];
           }
+          if(element['izinSakit'] != null) {
+            switch (element['izinSakit']['jenisAbsensi']) {
+              case 'izin':
+                iconButtonkeluar = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.warning_rounded,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
+                );
+                break;
+              case 'sakit':
+                iconButtonkeluar = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.local_hospital,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
+                );
+            }
+          }
+
+
+
+
+
+
+
           if (element['absenMasuk'] != null) {
             switch (element['absenMasuk']['stsValid']) {
               case null:
@@ -183,6 +219,35 @@ class _RekapAbsenState extends State<RekapAbsen> {
             }
             jamMasuk = element['absenMasuk']['jam'];
           }
+          if(element['izinSakit'] != null) {
+            switch (element['izinSakit']['jenisAbsensi']) {
+              case 'izin':
+                iconButtonmasuk = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.warning_rounded,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
+                );
+                break;
+              case 'sakit':
+                iconButtonmasuk = IconButton(
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.local_hospital,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    // ...
+                  },
+                );
+            }
+          }
+
+
           // Fluttertoast.showToast(msg: ['jenisAbsensi']);
 
           tempWidget.add(Container(
@@ -295,6 +360,17 @@ class _RekapAbsenState extends State<RekapAbsen> {
                         // Text("tidak absen")
                       ],
                     ),
+                    Row(
+                      children: [
+                        // Icon(Icons.check_circle, color: Colors.green,),
+                        // Text("status absen valid"),
+                        Icon(
+                          Icons.warning_rounded,
+                          color: Colors.green,
+                        ),
+                        Text(" Izin Valid                 ")
+                      ],
+                    ),
                   ],
                 ),
                 Column(
@@ -321,8 +397,20 @@ class _RekapAbsenState extends State<RekapAbsen> {
                         Text(" Tidak absen                  ")
                       ],
                     ),
+                    Row(
+                      children: [
+                        // Icon(Icons.check_circle, color: Colors.green,),
+                        // Text("status absen valid"),
+                        Icon(
+                          Icons.local_hospital,
+                          color: Colors.green,
+                        ),
+                        Text("Sakit Valid                      ")
+                      ],
+                    ),
                   ],
                 ),
+
               ],
             ),
             SizedBox(

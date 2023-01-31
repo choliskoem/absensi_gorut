@@ -44,8 +44,6 @@ class _MyAppState extends State<MyApp> {
   bool cekconfig = false;
   File? _filePath;
   bool _filexists = false;
- String? _check;
-
   String? status = "" ;
 
   void checkstatusconfig() async {
@@ -73,6 +71,7 @@ class _MyAppState extends State<MyApp> {
 
 
   }
+
   Future CheckUserConeection() async {
     try {
 
@@ -101,8 +100,6 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-
-
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
@@ -128,30 +125,16 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     CheckUserConeection();
     read();
     checkstatusconfig();
-
-
-
-
-
-
   }
 
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
-   print("Aktif : $ActiveConnection");
-   print("status : $status ");
-
-
-
     bool isLogin = box.hasData('kdUser');
     bool isonline = status == "online";
-    bool isoffline = status == "offline";
-
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
