@@ -22,40 +22,32 @@ class ConfigPage extends StatefulWidget {
 
 class _ConfigPageState extends State<ConfigPage> {
   FilePickerResult? result;
-  String? _versionapp;
+  File? _filePath;
   List<PlatformFile> files = [];
   bool visible = true;
-
-  File? _filePath;
-
-  bool _filexists = false;
-
-  String? status = "" ;
   bool ActiveConnection = false;
+  bool _filexists = false;
+  String? status = "";
+  String? _versionapp;
+
   Future checkstatusconfig() async {
     String _status = "";
     final path = await _localPath;
-    try{
+    try {
       final file = File('$path/config.json');
       final String response = await file.readAsString();
       Codec<String, String> stringToBase64 = utf8.fuse(base64);
       String decoded = stringToBase64.decode(response);
       String decoded2 = stringToBase64.decode(decoded);
       final data = await json.decode(decoded2);
-      _status = data["status"] ;
-
-
+      _status = data["status"];
 
       setState(() {
         status = _status;
-
       });
-    }catch (e){
-      status ="online";
+    } catch (e) {
+      status = "online";
     }
-
-
-
   }
 
   void package() async {
@@ -70,6 +62,7 @@ class _ConfigPageState extends State<ConfigPage> {
       _versionapp = versionapp;
     });
   }
+
   Future CheckUserConeection() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -86,6 +79,7 @@ class _ConfigPageState extends State<ConfigPage> {
       });
     }
   }
+
   Widget _submitButton() {
     return Visibility(
       visible: !visible,
@@ -105,8 +99,10 @@ class _ConfigPageState extends State<ConfigPage> {
             print('from path : ${file.path}');
             print('to path  : ${newfile!.path}');
 
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (BuildContext context) => ConfigPage()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ConfigPage()));
           },
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -133,6 +129,7 @@ class _ConfigPageState extends State<ConfigPage> {
       ),
     );
   }
+
   Widget _nextButton() {
     return Visibility(
       visible: visible,
@@ -142,25 +139,27 @@ class _ConfigPageState extends State<ConfigPage> {
           onTap: () async {
             await CheckUserConeection();
             await checkstatusconfig();
-            if(ActiveConnection == true && status == "online") {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
-            }else {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => AbsenPageOffline()));
-              }
-
+            if (ActiveConnection == true && status == "online") {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => Navigasi()));
+            } else {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => AbsenPageOffline()));
+            }
           },
           child:
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             SizedBox.fromSize(
               size: Size.square(70.0), // button width and height
               child: ClipOval(
                 child: Material(
                   color: Color.fromRGBO(76, 81, 93, 1),
-                  child:
-                  Icon(Icons.arrow_right_alt_rounded, color: Colors.white), // button color
+                  child: Icon(Icons.arrow_right_alt_rounded,
+                      color: Colors.white), // button color
                 ),
               ),
             ),
@@ -226,71 +225,68 @@ class _ConfigPageState extends State<ConfigPage> {
             Positioned(
                 height: MediaQuery.of(context).size.height * 0.50,
                 child: SigninContainer()),
-              SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          SizedBox(height: height * .55),
-                          Text(
-                            "UNGGAH FILE KONFIGURASI ",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900, fontSize: 20),
-                          ),
-                          Text(
-                            "File konfiguras dapat diperoleh dari operator masing-masing ",
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 50),
-                          _submitButton(),
-                          _nextButton(),
+            SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        SizedBox(height: height * .55),
+                        Text(
+                          "UNGGAH FILE KONFIGURASI ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 20),
+                        ),
+                        Text(
+                          "File konfiguras dapat diperoleh dari operator masing-masing ",
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 50),
+                        _submitButton(),
+                        _nextButton(),
 
-                          SizedBox(height: 20),
+                        SizedBox(height: 20),
 
-
-
-                          // ListView.builder(itemBuilder: (context, index){
-                          //        return Text(result?.files[index].name ?? "");
-                          // }),
-                          SizedBox(
-                            height: 100,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  text: "SI-ABON",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w900),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: '  offline',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontStyle: FontStyle.italic,
-                                            color: Colors.blue)),
-                                  ],
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                        // ListView.builder(itemBuilder: (context, index){
+                        //        return Text(result?.files[index].name ?? "");
+                        // }),
+                        SizedBox(
+                          height: 100,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: "SI-ABON",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w900),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: '  offline',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle: FontStyle.italic,
+                                          color: Colors.blue)),
+                                ],
                               ),
-                              Text("Version : $_versionapp")
-                            ],
-                          ),
-                          SizedBox(height: height * .050),
-                        ],
-                      ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            Text("Version : $_versionapp")
+                          ],
+                        ),
+                        SizedBox(height: height * .050),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-
+            ),
           ],
         ),
       ),

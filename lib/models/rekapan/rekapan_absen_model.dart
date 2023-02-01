@@ -37,11 +37,12 @@ class Child{
   int hari;
   final DataAbsenMasuk? absenMasuk;
   final DataAbsenKeluar?  absenKeluar;
-
+  final DataIzinSakit?  izinSakit;
  Child({
   required this.hari,
     required this.absenMasuk,
-   required this.absenKeluar
+   required this.absenKeluar,
+   required  this.izinSakit
 });
 
   factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
@@ -90,5 +91,27 @@ class DataAbsenKeluar{
   factory DataAbsenKeluar.fromJson(Map<String, dynamic> json) => _$DataAbsenKeluarFromJson(json);
 
 
+
+}
+@JsonSerializable(createToJson: false)
+class DataIzinSakit{
+  @JsonKey(name: 'jenisAbsensi')
+  final String jenisAbsensi ;
+  @JsonKey(name: 'jam')
+  final DateTime jam;
+  @JsonKey(name: 'presensi')
+  final String presensi ;
+  @JsonKey(name: 'stsValid')
+  final bool stsValid;
+  @JsonKey(name: 'kdAbsensi')
+  final String kdAbsensi;
+  DataIzinSakit({
+    required this.jenisAbsensi,
+    required this.jam,
+    required this.presensi,
+    required this.stsValid,
+    required this.kdAbsensi
+  });
+  factory DataIzinSakit.fromJson(Map<String, dynamic> json) => _$DataIzinSakitFromJson(json);
 
 }

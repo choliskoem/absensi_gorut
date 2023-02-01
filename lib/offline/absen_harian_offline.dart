@@ -27,22 +27,21 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
   late Future<void> _initializeControllerFuture;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
+  bool? fileExists;
   bool _fileExists = false;
   File? _filePath;
+  List<String> splitted = [''];
+  List<String> split_ = [''];
+  String? waktu;
   String? idjenis;
-  List _jsonlist = [];
-  Map<String, dynamic> _json = {};
-  String? _jsonString;
-  Barcode? _result;
   String? nik;
   String? Kduser;
   String? UnitKerja;
   String? Nama;
-  List<String> splitted = [''];
-  List<String> split_ = [''];
-  String? waktu;
-
-  bool? fileExists ;
+  List _jsonlist = [];
+  Map<String, dynamic> _json = {};
+  String? _jsonString;
+  Barcode? _result;
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -90,19 +89,8 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
     };
     print('1.(_writeJson) _newJson: $_newJson');
 
-    //2. Update _json by adding _newJson<Map> -> _json<Map>
-    // _json.addAll(_newJson);
-    // print('2.(_writeJson) _json(updated): $_json');
-
-
-
-
     _jsonlist.add(_newJson);
-    _json = {"data": _jsonlist };
-
-
-
-
+    _json = {"data": _jsonlist};
 
     //3. Convert _json ->_jsonString
     _jsonString = jsonEncode(_json);
@@ -128,7 +116,7 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
         print('1.(_readJson) _jsonString: $_jsonString');
 
         //2. Update initialized _json by converting _jsonString<String>->_json<Map>
-        _json =  jsonDecode(_jsonString!);
+        _json = jsonDecode(_jsonString!);
 
         _jsonlist = _json["data"];
         print('2.(_readJson) _json: $_json \n - \n');
@@ -140,14 +128,6 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
     }
   }
 
-  // void deleteFile() async {
-  //   _filePath = await _localFile;
-  //   _fileExists = await _filePath!.exists();
-  //   if (_fileExists) {
-  //     // _filePath!.delete(recursive: true);
-  //   }
-  // }
-
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
@@ -158,6 +138,7 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
       });
     });
   }
+
   Future<void> readJson() async {
     final path = await _localPath;
 
@@ -183,7 +164,6 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
     });
   }
 
-
   void take() async {
     _initializeControllerFuture = _controller!.initialize();
     await _initializeControllerFuture;
@@ -207,29 +187,23 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
 
     fileExists = await _file.exists();
 
-
-
-
-    idjenis = "1" ;
-    if(!fileExists!){
-     _file.create();
-   }else{
+    idjenis = "1";
+    if (!fileExists!) {
+      _file.create();
+    } else {
       final String response = await _file.readAsString();
-      if(!response.isEmpty) {
+      if (!response.isEmpty) {
         var objeklist = json.decode(response)['data'] as List;
         waktu = objeklist[objeklist.length - 1]['waktu'];
         splitted = waktu!.split(' ');
         final _date = DateTime.now();
         String _waktu = _date.toString();
         split_ = _waktu.split(' ');
-        if( splitted[0] == split_[0]){
+        if (splitted[0] == split_[0]) {
           idjenis = "2";
         }
       }
-
-
-   }
-
+    }
 
     _writeJson(
       'nik',
@@ -241,7 +215,7 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
       'kdAbensi',
       uuid.v4(),
       'urlimage',
-       _base64,
+      _base64,
       'latitude',
       lat,
       'longitude',
@@ -256,8 +230,6 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
     //_fileName = file;
     Navigator.pop(context);
   }
-
-
 
   @override
   void initState() {
