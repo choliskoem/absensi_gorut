@@ -1,32 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
+import 'package:absensi/common/my_color.dart';
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+
 
 const String kFileName = 'rekapan.json';
-
-class AbsenPageOff extends StatefulWidget {
-  const AbsenPageOff({Key? key, required this.camera}) : super(key: key);
-
-  final CameraDescription camera;
-
+class AbsenTugasLuarOffline extends StatefulWidget {
+  const AbsenTugasLuarOffline({Key? key, required this.camera}) : super(key: key);
+  final List<CameraDescription> camera;
   @override
-  State<AbsenPageOff> createState() => _AbsenPageOffState();
+  State<AbsenTugasLuarOffline> createState() => _AbsenTugasLuarOfflineState();
 }
 
-class _AbsenPageOffState extends State<AbsenPageOff> {
-  late CameraController _controller;
+class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
+  bool _loading = true;
+  late CameraController _cameraController;
   late Future<void> _initializeControllerFuture;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
   bool? fileExists;
   bool _fileExists = false;
   File? _filePath;
@@ -41,7 +38,6 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
   List _jsonlist = [];
   Map<String, dynamic> _json = {};
   String? _jsonString;
-  Barcode? _result;
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -127,18 +123,6 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
       }
     }
   }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      // Fluttertoast.showToast(msg: scanData.code.toString());
-      take();
-      setState(() {
-        _result = scanData;
-      });
-    });
-  }
-
   Future<void> readJson() async {
     final path = await _localPath;
 
@@ -164,31 +148,13 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
     });
   }
 
-  Future<void> kondisi() async {
-    var _file = await _localFile;
-    fileExists = await _file.exists();
-    if (!fileExists!) {
-      _file.create();
-    } else {
-      final String response = await _file.readAsString();
-      if (!response.isEmpty) {
-        var objeklist = json.decode(response)['data'] as List;
-        waktu = objeklist[objeklist.length - 1]['waktu'];
-        splitted = waktu!.split(' ');
-        final _date = DateTime.now();
-        String _waktu = _date.toString();
-        split_ = _waktu.split(' ');
-        if (splitted[0] == split_[0]) {
-          idjenis = "2";
-        }
-      }
-    }
-  }
 
-  void take() async {
-    _initializeControllerFuture = _controller!.initialize();
-    await _initializeControllerFuture;
-    await readJson();
+
+
+  void takePhoto() async {
+    setState(() {
+      _loading = false;
+    });
     var uuid = Uuid();
     final now = DateTime.now();
     String waktu_ = now.toString();
@@ -196,107 +162,88 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
         desiredAccuracy: LocationAccuracy.medium);
     String lat = position.latitude.toString();
     String lot = position.longitude.toString();
+    try {
+      _initializeControllerFuture = _cameraController.initialize();
+      await _initializeControllerFuture;
 
-    final image = await _controller!.takePicture();
-
-    File compressedFile = await FlutterNativeImage.compressImage(image.path,
-        quality: 80, percentage: 100);
-    Uint8List? bytes = await (compressedFile.readAsBytesSync());
-
-    var _base64 = base64Encode(bytes!);
+      final image = await _cameraController.takePicture();
 
 
 
+      if (!mounted) return;
 
-    idjenis = "1";
+      File compressedFile = await FlutterNativeImage.compressImage(image.path,
+          quality: 80, percentage: 100);
+      Uint8List? bytes = await (compressedFile.readAsBytesSync());
 
-    await kondisi();
+      var _base64 = base64Encode(bytes!);
+      var _file = await _localFile;
 
-    _writeJson(
-      'nik',
-      '$nik',
-      'idjenis',
-      idjenis,
-      'waktu',
-      waktu_,
-      'kdAbensi',
-      uuid.v4(),
-      'urlimage',
-      _base64,
-      'latitude',
-      lat,
-      'longitude',
-      lot,
-      'kdLokasi',
-      '${_result!.code}',
-      'status',
-      'offline',
-    );
-    final file = await _localFile;
-    _fileExists = await file.exists();
-    //_fileName = file;
-    Navigator.pop(context);
+      fileExists = await _file.exists();
+
+      idjenis = "1";
+
+
+      setState(() {
+        _cameraController.pausePreview();
+      });
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: e.toString());
+    }
   }
+
+
+@override
+void frontcamera() async{
+  final cameras = await availableCameras(); //get list of available cameras
+  final frontCam = cameras[1];
+
+
+}
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.high,
-    );
-
-    _readJson();
+    _cameraController =
+        CameraController(widget.camera[1], ResolutionPreset.medium);
+    _initializeControllerFuture = _cameraController.initialize();
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }
 
   @override
   void dispose() {
-    controller?.dispose();
-    _controller?.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-                flex: 5,
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                  overlay: QrScannerOverlayShape(
-                      borderRadius: 10,
-                      borderWidth: 5,
-                      borderColor: Colors.white),
-                )),
-            Container(
-              margin: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.red),
-                onPressed: () async {
-                  await controller?.resumeCamera();
-                },
-                child:
-                    const Text('Aktif Camera', style: TextStyle(fontSize: 20)),
-              ),
-            ),
-          ],
-        ),
+      body: FutureBuilder<void>(
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return CameraPreview(_cameraController);
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
+      floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 150),
+          child: FloatingActionButton(
+            onPressed: () async {
+              takePhoto();
+            },
+            child: const Icon(Icons.camera_alt),
+          ))
+
     );
   }
 }

@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+
   void tampildataBerita() async {
     List<Widget> tempWidget = [];
     var berita = Berita();
@@ -91,25 +92,11 @@ class _HomePageState extends State<HomePage> {
 
       body.forEach((element) async {
         String UrlGambar = element!["url_gambar"].toString();
-
-        // try {
-        //   final result = await InternetAddress.lookup(UrlGambar);
-        //   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        //     setState(() {
-        //      Ada_gambar = true ;
-        //       // Fluttertoast.showToast(msg: "Online");
-        //     });
-        //   }
-        // } on SocketException catch (_) {
-        //   setState(() {
-        //      Ada_gambar = false;
-        //     // Fluttertoast.showToast(msg: "$ActiveConnection");
-        //   });
-        // }
         String Waktu = element!["waktu"].toString();
         String Deskripsi = element!["deskripsi"].toString();
         String Judul = element!["judul"].toString();
         String UrlBerita = element!["url_berita"].toString();
+
         tempWidget.add(
           Container(
             width: 300,
@@ -125,14 +112,13 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
-                  Ada_gambar!
-                      ? Image.network(
+                   Image.network(
                           '$UrlGambar',
                           fit: BoxFit.fill,
                           width: 250,
                           height: 110,
                         )
-                      : Container(),
+                  ,
                   SizedBox(
                     height: 5,
                   ),
@@ -322,7 +308,6 @@ class _HomePageState extends State<HomePage> {
 
   Future _refresh() async {
     _filePath = await _localFile;
-    // 0. Check whether the _file exists
     _filexists = await _filePath!.exists();
     await Future.delayed(Duration(seconds: 2));
     await CheckUserConeection();
@@ -432,7 +417,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isonline = status == "online";
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -708,59 +692,6 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             )
-                            //lisview offline            // : ListView(
-                            //     scrollDirection: Axis.horizontal,
-                            //     children: <Widget>[
-                            //       Visibility(
-                            //         visible: true,
-                            //         child: InkWell(
-                            //           onTap: () {
-                            //             Navigator.of(context,
-                            //                     rootNavigator: false)
-                            //                 .push(MaterialPageRoute(
-                            //                     builder: (context) =>
-                            //                         const AbsenPageOffline(),
-                            //                     maintainState: false));
-                            //           },
-                            //           child: Ink(
-                            //             height: 100,
-                            //             width: 100,
-                            //             child: Card(
-                            //               shape: const RoundedRectangleBorder(
-                            //                 borderRadius: BorderRadius.all(
-                            //                   Radius.circular(9),
-                            //                 ),
-                            //               ),
-                            //               color: Colors.orange,
-                            //               elevation: 8,
-                            //               shadowColor: Colors.white,
-                            //               child: Column(
-                            //                 mainAxisAlignment:
-                            //                     MainAxisAlignment.center,
-                            //                 children: const [
-                            //                   Icon(
-                            //                     FluentIcons
-                            //                         .calendar_day_24_filled,
-                            //                     size: 30,
-                            //                     color: Colors.white,
-                            //                   ),
-                            //                   Text(
-                            //                     '\nAbsensi',
-                            //                     style: TextStyle(
-                            //                         fontSize: 12,
-                            //                         color: Colors.white,
-                            //                         fontWeight:
-                            //                             FontWeight.w500),
-                            //                     textAlign: TextAlign.center,
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
                             ),
                       ],
                     ),
@@ -797,48 +728,6 @@ class _HomePageState extends State<HomePage> {
                               scrollDirection: Axis.vertical,
                               children: tempkegiatan,
                             )
-                            // : ListView(
-                            //     padding: EdgeInsets.symmetric(vertical: 10),
-                            //     scrollDirection: Axis.vertical,
-                            //     children: [
-                            //         Container(
-                            //           width: 40,
-                            //           height: 110,
-                            //           color: ActiveConnection && isonline
-                            //               ? MyColor.orange1
-                            //               : Colors.orange,
-                            //           child: GestureDetector(
-                            //             onTap: () {},
-                            //             child: Card(
-                            //               shape: RoundedRectangleBorder(
-                            //                 borderRadius: BorderRadius.all(
-                            //                   Radius.circular(9),
-                            //                 ),
-                            //               ),
-                            //               child: Column(
-                            //                 children: [
-                            //                   SizedBox(
-                            //                     height: 10,
-                            //                   ),
-                            //                   Column(
-                            //                     children: [
-                            //                       SizedBox(
-                            //                         height: 30,
-                            //                       ),
-                            //                       Text(
-                            //                         "Tidak ada data pemberitahuan",
-                            //                         style: TextStyle(
-                            //                             fontWeight:
-                            //                                 FontWeight.w500),
-                            //                       ),
-                            //                     ],
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ]),
                             ),
                         const SizedBox(height: 10),
                         const Text(
@@ -872,19 +761,6 @@ class _HomePageState extends State<HomePage> {
                             child: ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: widgets)
-                            // : ListView(
-                            //     shrinkWrap: true,
-                            //     scrollDirection: Axis.horizontal,
-                            //     padding:
-                            //         EdgeInsets.symmetric(horizontal: 134),
-                            //     children: [
-                            //       Center(
-                            //           child: Text(
-                            //         "Tidak ada data berita",
-                            //         textAlign: TextAlign.center,
-                            //       ))
-                            //     ],
-                            //   ),
                             ),
                       ],
                     ),
