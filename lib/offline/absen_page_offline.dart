@@ -2,20 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:absensi/common/my_color.dart';
 import 'package:absensi/common/my_typhography.dart';
-import 'package:absensi/models/status_absen/status_absen_body.dart';
+import 'package:absensi/helper/helper.dart';
 import 'package:absensi/offline/absen_harian_offline.dart';
+import 'package:absensi/offline/absen_tugasluar_offline.dart';
 import 'package:absensi/offline/configpage.dart';
-import 'package:absensi/pages/absen-sakit.dart';
 import 'package:absensi/pages/navigasi.dart';
-import 'package:absensi/pages/qrcode.dart';
 import 'package:absensi/pages/tugasluar.dart';
-import 'package:absensi/services/auth/biodata_service.dart';
-import 'package:absensi/services/status_absen/status_absen_service.dart';
-import 'package:absensi/spt/spt_page.dart';
 import 'package:absensi/widgets/my_appbar2.dart';
 import 'package:absensi/widgets/my_button.dart';
 import 'package:camera/camera.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -67,33 +62,23 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
   List<String> splitted = [''];
   List<String> split_ = [''];
 
-  Future checkstatusconfig() async {
-    String _status = "";
-    final path = await _localPath;
-    try {
-      final file = File('$path/config.json');
-      final String response = await file.readAsString();
-      Codec<String, String> stringToBase64 = utf8.fuse(base64);
-      String decoded = stringToBase64.decode(response);
-      String decoded2 = stringToBase64.decode(decoded);
-      final data = await json.decode(decoded2);
-      _status = data["status"];
-
-      setState(() {
-        status = _status;
-      });
-    } catch (e) {
-      status = "online";
-    }
-  }
-
   Future _refresh() async {
-    _filePath = await _localFile;
-    // 0. Check whether the _file exists
-    _filexists = await _filePath!.exists();
+    await Helper().read().then((value) {
+      setState(() {
+        _filexists = value;
+      });
+    });
     await Future.delayed(Duration(seconds: 2));
-    await CheckUserConeection();
-    await checkstatusconfig();
+    await Helper().CheckUserConeection().then((value) {
+      setState(() {
+        ActiveConnection = value!;
+      });
+    });
+    await Helper().checkstatusconfig().then((value) {
+      setState(() {
+        status = value;
+      });
+    });
     setState(() {
       if (ActiveConnection == true && status == "online") {
         Navigator.pushReplacement(context,
@@ -111,26 +96,12 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                   builder: (BuildContext context) => super.widget));
         }
       }
-
-      // if(ActiveConnection == true){
-      //   Navigator.pushReplacement(context,
-      //       MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
-      // }
-      // else{
-      //   Navigator.pushReplacement(context,
-      //       MaterialPageRoute(builder: (BuildContext context) => super.widget));
-      // }
     });
   }
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/config.json');
   }
 
   Future<File> get localfilerekap async {
@@ -176,21 +147,12 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
     });
   }
 
-  Future CheckUserConeection() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          ActiveConnection = true;
-          // Fluttertoast.showToast(msg: "Online");
-        });
-      }
-    } on SocketException catch (_) {
+  Future _Helper() async {
+    await Helper().CheckUserConeection().then((value) {
       setState(() {
-        ActiveConnection = false;
-        // Fluttertoast.showToast(msg: "Offline");
+        ActiveConnection = value!;
       });
-    }
+    });
   }
 
   void time() async {
@@ -218,7 +180,7 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
 
   void initState() {
     super.initState();
-    CheckUserConeection();
+    _Helper();
     getLocation();
     time();
     package();
@@ -383,11 +345,11 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 100),
-                          child: Row(
+                          child: Column(
                             children: [
                               Visibility(
-                                visible: buttondisabledharian!,
-                                child: Center(child: Text("Absen Harian")),
+                                visible: true,
+                                child: Container(child: Text("Absen Harian")),
                               ),
                             ],
                           ),
@@ -440,7 +402,7 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                             centerText: Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 52),
-                              child: Text("absen masuk"),
+                              child: Text("absen"),
                             ),
                           ),
                         ),
@@ -449,11 +411,11 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 100),
-                          child: Row(
+                          child: Column(
                             children: [
                               Visibility(
-                                  visible: buttondisabledluar!,
-                                  child: Text("Absen Tugas Luar")),
+                                  visible: true,
+                                  child: Container(child: Text("Absen Tugas Luar"))),
                             ],
                           ),
                         ),
@@ -462,18 +424,51 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                           child: MyButton(
                             onTap: () async {
                               final cameras = await availableCameras();
-                              await availableCameras().then((value) =>
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              TugasLuar(camera: cameras))));
+
+                              var _file = await localfilerekap;
+                              filexists = await _file.exists();
+
+                              if (!filexists!) {
+                                _file.create();
+                              } else {
+                                final String response =
+                                await _file.readAsString();
+                                if (!response.isEmpty) {
+                                  var objeklist =
+                                  json.decode(response)['data'] as List;
+                                  _waktuu =
+                                  objeklist[objeklist.length - 1]['waktu'];
+                                  id_jenis = objeklist[objeklist.length - 1]
+                                  ['idjenis'];
+                                  splitted = _waktuu!.split(' ');
+                                  final _date = DateTime.now();
+                                  String _waktu = _date.toString();
+                                  split_ = _waktu.split(' ');
+                                }
+                                if (filexists! &&
+                                    split_[0] == splitted[0] &&
+                                    id_jenis == '2') {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                      "Anda Telah Selesai Melakukan Presensi Hari ini")
+                                      .toString();
+                                } else {
+                                  await availableCameras().then((value) =>
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  AbsenTugasLuarOffline(camera: cameras))));
+                                }
+                              }
+                              setState(() {});
+
                             },
                             color: Colors.orange,
                             centerText: Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 52),
-                              child: Text("absen masuk"),
+                              child: Text("absen "),
                             ),
                           ),
                         ),

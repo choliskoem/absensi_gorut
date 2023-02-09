@@ -34,14 +34,10 @@ class _QrCodePageState extends State<QrCodePage> {
     });
   }
 
-
-
   @override
   void initState() {
     super.initState();
-
   }
-
 
   @override
   void reassemble() {
@@ -52,6 +48,7 @@ class _QrCodePageState extends State<QrCodePage> {
       controller!.resumeCamera();
     }
   }
+
   @override
   void dispose() {
     controller?.dispose();
@@ -79,11 +76,12 @@ class _QrCodePageState extends State<QrCodePage> {
             Container(
               margin: const EdgeInsets.all(8),
               child: ElevatedButton(
-                style:  ElevatedButton.styleFrom(primary: MyColor.orange1),
+                style: ElevatedButton.styleFrom(primary: MyColor.orange1),
                 onPressed: () async {
                   await controller?.resumeCamera();
                 },
-                child: const Text('Aktif Camera', style: TextStyle(fontSize: 20)),
+                child:
+                    const Text('Aktif Camera', style: TextStyle(fontSize: 20)),
               ),
             ),
           ],

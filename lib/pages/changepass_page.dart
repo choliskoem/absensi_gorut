@@ -34,33 +34,10 @@ class _ChangePassState extends State<ChangePass> {
   String passwordalama = "";
   String passwordbaru = "";
 
-  // Future<void> _getId() async {
-  //   final DeviceInfoPlugin deviceInfoPlugin = new DeviceInfoPlugin();
-  //   try {
-  //     if (Platform.isAndroid) {
-  //       var build = await deviceInfoPlugin.androidInfo;
-  //       setState(() {
-  //         deviceId = build.androidId;
-  //       });
-  //     } else if (Platform.isIOS) {
-  //       var data = await deviceInfoPlugin.iosInfo;
-  //       setState(() {
-  //         deviceId = data.identifierForVendor;
-  //       });
-  //     }
-  //   } on PlatformException {
-  //     print("error");
-  //   }
-  // }
-
-  // if there is no error text
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    // _getId();
   }
 
   @override
@@ -183,9 +160,9 @@ class _ChangePassState extends State<ChangePass> {
                                       passwordbaruController.text)
                                   .then((value) {
                                 if (value['status'] == 200) {
-                                  Fluttertoast.showToast(msg: value['body']['message'].toString());
+                                  Fluttertoast.showToast(
+                                      msg: value['body']['message'].toString());
                                   Navigator.pop(context);
-                                  
                                 } else if (value['status'] == 401) {
                                   // Fluttertoast.showToast(
                                   //     msg: value['body']['message'].toString());

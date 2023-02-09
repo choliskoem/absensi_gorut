@@ -5,23 +5,24 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:absensi/common/my_color.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 
-
 const String kFileName = 'rekapan.json';
+
 class AbsenTugasLuarOffline extends StatefulWidget {
-  const AbsenTugasLuarOffline({Key? key, required this.camera}) : super(key: key);
+  const AbsenTugasLuarOffline({Key? key, required this.camera})
+      : super(key: key);
   final List<CameraDescription> camera;
+
   @override
   State<AbsenTugasLuarOffline> createState() => _AbsenTugasLuarOfflineState();
 }
 
 class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
-  bool _loading = true;
+
   late CameraController _cameraController;
   late Future<void> _initializeControllerFuture;
   bool? fileExists;
@@ -47,6 +48,27 @@ class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
   Future<File> get _localFile async {
     final path = await _localPath;
     return File('$path/$kFileName');
+  }
+
+  Future<void> kondisi() async {
+    var _file = await _localFile;
+    fileExists = await _file.exists();
+    if (!fileExists!) {
+      _file.create();
+    } else {
+      final String response = await _file.readAsString();
+      if (!response.isEmpty) {
+        var objeklist = json.decode(response)['data'] as List;
+        waktu = objeklist[objeklist.length - 1]['waktu'];
+        splitted = waktu!.split(' ');
+        final _date = DateTime.now();
+        String _waktu = _date.toString();
+        split_ = _waktu.split(' ');
+        if (splitted[0] == split_[0]) {
+          idjenis = "2";
+        }
+      }
+    }
   }
 
   void _writeJson(
@@ -123,6 +145,7 @@ class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
       }
     }
   }
+
   Future<void> readJson() async {
     final path = await _localPath;
 
@@ -148,13 +171,8 @@ class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
     });
   }
 
-
-
-
   void takePhoto() async {
-    setState(() {
-      _loading = false;
-    });
+    await readJson();
     var uuid = Uuid();
     final now = DateTime.now();
     String waktu_ = now.toString();
@@ -167,8 +185,6 @@ class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
       await _initializeControllerFuture;
 
       final image = await _cameraController.takePicture();
-
-
 
       if (!mounted) return;
 
@@ -183,7 +199,32 @@ class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
 
       idjenis = "1";
 
+      await kondisi();
 
+      _writeJson(
+        'nik',
+        '$nik',
+        'idjenis',
+        idjenis,
+        'waktu',
+        waktu_,
+        'kdAbensi',
+        uuid.v4(),
+        'urlimage',
+        _base64,
+        'latitude',
+        lat,
+        'longitude',
+        lot,
+        'kdLokasi',
+        null,
+        'status',
+        'offline',
+      );
+      final file = await _localFile;
+      _fileExists = await file.exists();
+      //_fileName = file;
+      Navigator.pop(context);
       setState(() {
         _cameraController.pausePreview();
       });
@@ -193,14 +234,11 @@ class _AbsenTugasLuarOfflineState extends State<AbsenTugasLuarOffline> {
     }
   }
 
-
-@override
-void frontcamera() async{
-  final cameras = await availableCameras(); //get list of available cameras
-  final frontCam = cameras[1];
-
-
-}
+  @override
+  void frontcamera() async {
+    final cameras = await availableCameras(); //get list of available cameras
+    final frontCam = cameras[1];
+  }
 
   @override
   void initState() {
@@ -208,8 +246,9 @@ void frontcamera() async{
     _cameraController =
         CameraController(widget.camera[1], ResolutionPreset.medium);
     _initializeControllerFuture = _cameraController.initialize();
-  }
 
+    _readJson();
+  }
 
   @override
   void dispose() {
@@ -217,33 +256,26 @@ void frontcamera() async{
     super.dispose();
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return CameraPreview(_cameraController);
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      floatingActionButton: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 150),
-          child: FloatingActionButton(
-            onPressed: () async {
-              takePhoto();
-            },
-            child: const Icon(Icons.camera_alt),
-          ))
-
-    );
+        body: FutureBuilder<void>(
+          future: _initializeControllerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return CameraPreview(_cameraController);
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+        floatingActionButton: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 150),
+            child: FloatingActionButton(
+              onPressed: () async {
+                takePhoto();
+              },
+              child: const Icon(Icons.camera_alt),
+            )));
   }
 }

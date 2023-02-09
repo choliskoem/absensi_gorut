@@ -350,16 +350,12 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         ActiveConnection = value!;
       });
-
     });
     Helper().checkstatusconfig().then((value) {
       setState(() {
         status = value;
       });
-
-
     });
-
   }
 
   Future<void> readJson() async {

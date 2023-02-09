@@ -229,72 +229,65 @@ class HeaderCurvedContainer extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-
-
-
-
-
-
-    // return MaterialApp(
-    //   debugShowCheckedModeBanner: false,
-    //   home: Scaffold(
-    //     backgroundColor: Colors.white,
-    //     body: SafeArea(
-    //       child: SingleChildScrollView(
-    //         child: Column(
-    //           children: [
-    //             Stack(
-    //               clipBehavior: Clip.none,
-    //               alignment: Alignment.center,
-    //               children: [
-    //                 Image(image: AssetImage('assets/images/saronde.jpg')),
-    //                 Positioned(
-    //                   bottom: -50.5,
-    //                   child: CircleAvatar(
-    //                     backgroundColor: Colors.white38,
-    //                     radius: 70,
-    //                     child: ClipRRect(
-    //                       child: Image.asset('assets/images/kabgor.png'),
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //             SizedBox(
-    //               height: 20,
-    //             ),
-    //             ListTile(
-    //               title: Text(' Nik'),
-    //               subtitle: Text(box.read('nik')),
-    //             ),
-    //             ListTile(
-    //               title: Text('Nama Lengkap'),
-    //               subtitle: Text('$Nama'),
-    //             ),
-    //             ListTile(
-    //               title: Text('Agama'),
-    //               subtitle: Text('$Agama'),
-    //             ),
-    //
-    //             ListTile(
-    //               title: Text('Tanggal Lahir'),
-    //               subtitle: Text('$Tgl'),
-    //             ),
-    //             ListTile(
-    //               title: Text('Tempat Lahir'),
-    //               subtitle: Text('$Tl'),
-    //             ),
-    //             ListTile(
-    //               title: Text('Gender'),
-    //               subtitle: Text('$Jk'),
-    //             ),
-    //
-    //
-    //
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
-
+// return MaterialApp(
+//   debugShowCheckedModeBanner: false,
+//   home: Scaffold(
+//     backgroundColor: Colors.white,
+//     body: SafeArea(
+//       child: SingleChildScrollView(
+//         child: Column(
+//           children: [
+//             Stack(
+//               clipBehavior: Clip.none,
+//               alignment: Alignment.center,
+//               children: [
+//                 Image(image: AssetImage('assets/images/saronde.jpg')),
+//                 Positioned(
+//                   bottom: -50.5,
+//                   child: CircleAvatar(
+//                     backgroundColor: Colors.white38,
+//                     radius: 70,
+//                     child: ClipRRect(
+//                       child: Image.asset('assets/images/kabgor.png'),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             SizedBox(
+//               height: 20,
+//             ),
+//             ListTile(
+//               title: Text(' Nik'),
+//               subtitle: Text(box.read('nik')),
+//             ),
+//             ListTile(
+//               title: Text('Nama Lengkap'),
+//               subtitle: Text('$Nama'),
+//             ),
+//             ListTile(
+//               title: Text('Agama'),
+//               subtitle: Text('$Agama'),
+//             ),
+//
+//             ListTile(
+//               title: Text('Tanggal Lahir'),
+//               subtitle: Text('$Tgl'),
+//             ),
+//             ListTile(
+//               title: Text('Tempat Lahir'),
+//               subtitle: Text('$Tl'),
+//             ),
+//             ListTile(
+//               title: Text('Gender'),
+//               subtitle: Text('$Jk'),
+//             ),
+//
+//
+//
+//           ],
+//         ),
+//       ),
+//     ),
+//   ),
+// );

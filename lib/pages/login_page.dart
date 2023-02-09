@@ -6,8 +6,6 @@ import 'package:absensi/offline/widget/configcontainer.dart';
 import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/services/auth/auth_service.dart';
 import 'package:absensi/widgets/my_button.dart';
-import 'package:absensi/widgets/signincontainer.dart';
-import 'package:camera/camera.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -52,28 +50,22 @@ class _LoginPageState extends State<LoginPage> {
       _versionapp = versionapp;
     });
   }
-  Future<void> _getId() async {
 
+  Future<void> _getId() async {
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
         var build = await deviceInfoPlugin.androidInfo;
 
         setState(() {
-
           _deviceId = build.id;
-
-
-
         });
-
       } else if (Platform.isIOS) {
         var data = await deviceInfoPlugin.iosInfo;
 
         setState(() {
           _deviceId = data.identifierForVendor!;
         });
-
       }
     } on PlatformException {
       Fluttertoast.showToast(msg: "error");
@@ -86,17 +78,12 @@ class _LoginPageState extends State<LoginPage> {
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
     permission = await Geolocator.requestPermission();
-
   }
-
 
   Widget UsernameText() {
     return TextField(
-      onChanged: (text) => setState(() => {
-        _errorMessageEmail = '',
-        _validateEmail = false,
-        _text
-      }),
+      onChanged: (text) => setState(
+          () => {_errorMessageEmail = '', _validateEmail = false, _text}),
       controller: userController,
       decoration: InputDecoration(
         errorText: _validateEmail ? _errorMessageEmail : null,
@@ -119,13 +106,11 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   Widget PasswordText() {
     return TextField(
-      onChanged: (text) => setState(() => {
-        _errorMessagePassword = '',
-        _validatePassword = false,
-        _text
-      }),
+      onChanged: (text) => setState(
+          () => {_errorMessagePassword = '', _validatePassword = false, _text}),
       controller: passwordController,
       decoration: InputDecoration(
         errorText: _validatePassword ? _errorMessagePassword : null,
@@ -160,61 +145,57 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: obsecureText,
     );
   }
+
   Widget LoginButton() {
     return SizedBox(
       width: 193,
-      child: isLoading ? MyButton(
-        onTap: () {
-          setState((){
-            isLoading=false;
-          });
-          var auth = AuthService();
-          auth.authService(userController.text, passwordController.text, "$_deviceId".toString())
-              .then((value) {
-            if (value['status'] == 200)  {
-
-              Navigator.of(context, rootNavigator: false)
-                  .pushReplacement(MaterialPageRoute(
-                builder: (context) => const Navigasi(),
-              ));
-            }
-            else if (value['status'] == 401){
-              Fluttertoast.showToast(msg: value['body']['message'].toString() );
-            }
-            else if ( value['status'] == 422){
-              // userController.text.isEmpty ? _validate = true : _validate = false;
-              Map<String, dynamic> errors = value['errors'];
-              if(errors.containsKey("email")){
+      child: isLoading
+          ? MyButton(
+              onTap: () {
                 setState(() {
-                  _errorMessageEmail = errors['email'].toString();
-                  _validateEmail = true;
+                  isLoading = false;
                 });
-
-              }
-              if(errors.containsKey("password")){
-                setState((){
-                  _errorMessagePassword = errors['password'].toString();
-                  _validatePassword = true;
+                var auth = AuthService();
+                auth
+                    .authService(userController.text, passwordController.text,
+                        "$_deviceId".toString())
+                    .then((value) {
+                  if (value['status'] == 200) {
+                    Navigator.of(context, rootNavigator: false)
+                        .pushReplacement(MaterialPageRoute(
+                      builder: (context) => const Navigasi(),
+                    ));
+                  } else if (value['status'] == 401) {
+                    Fluttertoast.showToast(
+                        msg: value['body']['message'].toString());
+                  } else if (value['status'] == 422) {
+                    // userController.text.isEmpty ? _validate = true : _validate = false;
+                    Map<String, dynamic> errors = value['errors'];
+                    if (errors.containsKey("email")) {
+                      setState(() {
+                        _errorMessageEmail = errors['email'].toString();
+                        _validateEmail = true;
+                      });
+                    }
+                    if (errors.containsKey("password")) {
+                      setState(() {
+                        _errorMessagePassword = errors['password'].toString();
+                        _validatePassword = true;
+                      });
+                    }
+                  }
+                  setState(() {
+                    isLoading = true;
+                  });
                 });
-
-              }
-            }
-            setState((){
-              isLoading=true;
-            });
-
-
-          });
-
-        },
-
-        color: MyColor.orange1,
-        centerText: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Text('Login', style: MyTyphography.buttontypo),
-        ),
-      )
-          : Center(child:CircularProgressIndicator()),
+              },
+              color: MyColor.orange1,
+              centerText: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: Text('Login', style: MyTyphography.buttontypo),
+              ),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -225,7 +206,6 @@ class _LoginPageState extends State<LoginPage> {
     getLocation();
     package();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +219,9 @@ class _LoginPageState extends State<LoginPage> {
               Positioned(
                   height: MediaQuery.of(context).size.height / 2,
                   child: SigninContainer()),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
@@ -255,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(height: 30),
                           LoginButton(),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height /15,
+                            height: MediaQuery.of(context).size.height / 15,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -288,7 +270,6 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-
             ],
           ),
         ),

@@ -3,7 +3,6 @@ import 'package:absensi/common/my_typhography.dart';
 import 'package:absensi/services/rekapan/rekapan_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/utils.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../widgets/my_appbar2.dart';
@@ -85,7 +84,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
               color: Colors.red,
             ),
             onPressed: () {
-            Fluttertoast.showToast(msg: 'pindah halaman');
+              Fluttertoast.showToast(msg: 'pindah halaman');
             },
           );
 
@@ -99,7 +98,6 @@ class _RekapAbsenState extends State<RekapAbsen> {
               // ...
             },
           );
-
 
           if (element['absenKeluar'] != null) {
             switch (element['absenKeluar']['stsValid']) {
@@ -142,7 +140,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
             }
             jamKeluar = element['absenKeluar']['jam'];
           }
-          if(element['izinSakit'] != null) {
+          if (element['izinSakit'] != null) {
             switch (element['izinSakit']['jenisAbsensi']) {
               case 'izin':
                 iconButtonkeluar = IconButton(
@@ -169,12 +167,6 @@ class _RekapAbsenState extends State<RekapAbsen> {
                 );
             }
           }
-
-
-
-
-
-
 
           if (element['absenMasuk'] != null) {
             switch (element['absenMasuk']['stsValid']) {
@@ -219,7 +211,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
             }
             jamMasuk = element['absenMasuk']['jam'];
           }
-          if(element['izinSakit'] != null) {
+          if (element['izinSakit'] != null) {
             switch (element['izinSakit']['jenisAbsensi']) {
               case 'izin':
                 iconButtonmasuk = IconButton(
@@ -246,7 +238,6 @@ class _RekapAbsenState extends State<RekapAbsen> {
                 );
             }
           }
-
 
           // Fluttertoast.showToast(msg: ['jenisAbsensi']);
 
@@ -410,7 +401,6 @@ class _RekapAbsenState extends State<RekapAbsen> {
                     ),
                   ],
                 ),
-
               ],
             ),
             SizedBox(

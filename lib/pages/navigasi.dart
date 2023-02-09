@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:absensi/common/my_color.dart';
 import 'package:absensi/pages/about_page.dart';
 import 'package:absensi/pages/profile_page.dart';
@@ -8,10 +5,8 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:absensi/pages/home_page.dart';
-
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Navigasi extends StatefulWidget {
   const Navigasi({Key? key}) : super(key: key);
@@ -21,13 +16,7 @@ class Navigasi extends StatefulWidget {
 }
 
 class _NavigasiState extends State<Navigasi> {
-
-
   bool ActiveConnection = false;
-
-
-
-
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -35,19 +24,13 @@ class _NavigasiState extends State<Navigasi> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     AboutPage(),
-   ProfilePage()
+    ProfilePage()
   ];
 
   @override
   void initState() {
     super.initState();
-
-
-
-
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +43,7 @@ class _NavigasiState extends State<Navigasi> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color:  MyColor.orange1,
+          color: MyColor.orange1,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -72,14 +55,14 @@ class _NavigasiState extends State<Navigasi> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
             child: GNav(
-              rippleColor: MyColor.orange1 ,
-              hoverColor:  MyColor.orange1 ,
+              rippleColor: MyColor.orange1,
+              hoverColor: MyColor.orange1,
               gap: 8,
               activeColor: Colors.white,
               iconSize: 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               duration: Duration(milliseconds: 400),
-              tabBackgroundColor:  MyColor.orange1 ,
+              tabBackgroundColor: MyColor.orange1,
               color: Colors.white,
               tabs: [
                 GButton(

@@ -8,7 +8,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
 const String kFileName = 'rekapan.json';
@@ -204,9 +203,6 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
     Uint8List? bytes = await (compressedFile.readAsBytesSync());
 
     var _base64 = base64Encode(bytes!);
-
-
-
 
     idjenis = "1";
 

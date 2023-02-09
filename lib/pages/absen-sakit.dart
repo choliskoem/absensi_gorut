@@ -36,8 +36,8 @@ class _AbsenSakitState extends State<AbsenSakit> {
       Service service = await Service();
       Uint8List bytes = await image.readAsBytes();
       service.AbsenSakit(bytes).then((value) {
-        Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  Navigasi()));
-
+        Navigator.of(context, rootNavigator: false).pushReplacement(
+            MaterialPageRoute(builder: (context) => Navigasi()));
       });
       setState(() {
         _loading = false;

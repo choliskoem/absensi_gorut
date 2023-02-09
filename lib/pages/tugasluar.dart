@@ -1,8 +1,5 @@
-import 'dart:developer';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:absensi/pages/rekap_absen.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:absensi/services/multipart/multipart-service.dart';
 import 'package:camera/camera.dart';
@@ -37,8 +34,8 @@ class _TugasLuarState extends State<TugasLuar> {
       Service service = Service();
       Uint8List bytes = await image.readAsBytes();
       service.Tugasluar(bytes).then((value) {
-
-        Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  RekapAbsen()));
+        Navigator.of(context, rootNavigator: false).pushReplacement(
+            MaterialPageRoute(builder: (context) => RekapAbsen()));
       });
       setState(() {
         _loading = false;
@@ -65,8 +62,7 @@ class _TugasLuarState extends State<TugasLuar> {
     _cameraController =
         CameraController(widget.camera[1], ResolutionPreset.medium);
     _initializeControllerFuture = _cameraController.initialize();
-      }
-
+  }
 
   @override
   void dispose() {
@@ -97,8 +93,8 @@ class _TugasLuarState extends State<TugasLuar> {
                 child: const Icon(Icons.camera_alt),
               ))
           : WillPopScope(
-             onWillPop: () async => false,
-            child: Column(
+              onWillPop: () async => false,
+              child: Column(
                 children: [
                   SizedBox(
                     height: 250,
@@ -148,7 +144,7 @@ class _TugasLuarState extends State<TugasLuar> {
                   ),
                 ],
               ),
-          ),
+            ),
     );
   }
 }

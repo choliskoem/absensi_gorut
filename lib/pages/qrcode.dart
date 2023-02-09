@@ -8,7 +8,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class SecondPage extends StatefulWidget {
@@ -26,7 +25,8 @@ class _SecondPageState extends State<SecondPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
- bool loading = true;
+  bool loading = true;
+
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
@@ -41,8 +41,7 @@ class _SecondPageState extends State<SecondPage> {
     });
   }
 
-  void takePhoto( String kdlokasi) async {
-
+  void takePhoto(String kdlokasi) async {
     try {
       _initializeControllerFuture = _cameraController.initialize();
       await _initializeControllerFuture;
@@ -53,20 +52,18 @@ class _SecondPageState extends State<SecondPage> {
       Service service = Service();
       Uint8List bytes = await image.readAsBytes();
       service.Absen(bytes, kdlokasi).then((value) {
-        if(value!["stsAbsen"]){
-          Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  RekapAbsen()));
-
-        }
-         else {
+        if (value!["stsAbsen"]) {
+          Navigator.of(context, rootNavigator: false).pushReplacement(
+              MaterialPageRoute(builder: (context) => RekapAbsen()));
+        } else {
           Fluttertoast.showToast(msg: value!["message"].toString());
-          Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  RekapAbsen()));
-
+          Navigator.of(context, rootNavigator: false).pushReplacement(
+              MaterialPageRoute(builder: (context) => RekapAbsen()));
         }
-
       });
 
-      setState((){
-        loading=false;
+      setState(() {
+        loading = false;
       });
     } catch (e) {
       print(e);
@@ -74,14 +71,15 @@ class _SecondPageState extends State<SecondPage> {
     }
   }
 
-  void getlokasi() async{
+  void getlokasi() async {
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     String lat = position.latitude.toString();
     String lot = position.longitude.toString();
 
-    print ('$lat, $lot');
+    print('$lat, $lot');
   }
+
   @override
   void initState() {
     super.initState();
@@ -118,74 +116,78 @@ class _SecondPageState extends State<SecondPage> {
           children: <Widget>[
             Expanded(
               flex: 5,
-              child: loading?
-              QRView(
-                key: qrKey,
-                onQRViewCreated: _onQRViewCreated,
-                overlay: QrScannerOverlayShape(
-                    borderRadius: 10,
-                    borderWidth: 5,
-                    borderColor: Colors.white),
-              )
+              child: loading
+                  ? QRView(
+                      key: qrKey,
+                      onQRViewCreated: _onQRViewCreated,
+                      overlay: QrScannerOverlayShape(
+                          borderRadius: 10,
+                          borderWidth: 5,
+                          borderColor: Colors.white),
+                    )
                   : WillPopScope(
-                onWillPop: () async => false,
-                    child: Column(
-                children: [
-                    SizedBox(height: 250,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 38),
-                      child: Container(
-                        width: 300,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            // topLeft: Radius.circular(10),
-                            // topRight: Radius.circular(10),
+                      onWillPop: () async => false,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 250,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: MyColor.orange1,
-                              blurRadius: 1,
-                              // Shadow position
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 38),
+                            child: Container(
+                              width: 300,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    // topLeft: Radius.circular(10),
+                                    // topRight: Radius.circular(10),
+                                    ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: MyColor.orange1,
+                                    blurRadius: 1,
+                                    // Shadow position
+                                  ),
+                                ],
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 25),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    "Mohon Tunggu\nSedang Diproses..",
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  CircularProgressIndicator(
+                                    backgroundColor: Colors.grey,
+                                    color: Colors.purple,
+                                    strokeWidth: 5,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    width: 120,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                        padding:  EdgeInsets.symmetric(vertical: 25),
-                        child: Column(
-                          children: <Widget>[
-                            Text("Mohon Tunggu\nSedang Diproses..",style: TextStyle(fontSize: 18),),
-                            SizedBox(height: 20,),
-                            CircularProgressIndicator(
-                              backgroundColor: Colors.grey,
-                              color: Colors.purple,
-                              strokeWidth: 5,
-                            ),
-                            SizedBox(height: 20,),
-                            Container(
-                              width: 120,
-
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-
-
-
-
-                ],
-              ),
-                  ),
-
             ),
             Container(
               margin: const EdgeInsets.all(8),
               child: ElevatedButton(
-                style:  ElevatedButton.styleFrom(primary: MyColor.orange1),
+                style: ElevatedButton.styleFrom(primary: MyColor.orange1),
                 onPressed: () async {
                   await controller?.resumeCamera();
                 },
-                child: const Text('Aktif Camera', style: TextStyle(fontSize: 20)),
+                child:
+                    const Text('Aktif Camera', style: TextStyle(fontSize: 20)),
               ),
             ),
           ],
@@ -194,4 +196,3 @@ class _SecondPageState extends State<SecondPage> {
     );
   }
 }
-

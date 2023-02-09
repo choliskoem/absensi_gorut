@@ -19,6 +19,7 @@ class SetLokasi extends StatefulWidget {
 class _SetLokasiState extends State<SetLokasi> {
   bool? _isButtonDisabled = false;
   String? message;
+
   Future _refresh() async {
     await Future.delayed(Duration(seconds: 2));
     setState(() {
@@ -26,14 +27,13 @@ class _SetLokasiState extends State<SetLokasi> {
           MaterialPageRoute(builder: (BuildContext context) => super.widget));
     });
   }
+
   void status() async {
     var service = SetelLokasi();
 
     service.statuslokasi().then((value) {
       setState(() {
-
         _isButtonDisabled = value!;
-
       });
     });
   }
@@ -45,19 +45,14 @@ class _SetLokasiState extends State<SetLokasi> {
       _message = value["message"].toString();
 
       Fluttertoast.showToast(msg: "$_message");
-
-
     });
-
-
-
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-status();
+    status();
   }
 
   @override
@@ -67,7 +62,7 @@ status();
         child: RefreshIndicator(
           onRefresh: _refresh,
           child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+            physics: AlwaysScrollableScrollPhysics(),
             child: Container(
               child: Column(
                 children: [
@@ -113,26 +108,33 @@ status();
                             height: 20,
                           ),
                           Container(
-                              width: 170,
-                              child:  _isButtonDisabled! ?  MyButton(
-                                onTap: () async {
-                                  if (_isButtonDisabled!) {
-                                    final cameras = await availableCameras();
-                                    final firstCamera = cameras.first;
+                            width: 170,
+                            child: _isButtonDisabled!
+                                ? MyButton(
+                                    onTap: () async {
+                                      if (_isButtonDisabled!) {
+                                        final cameras =
+                                            await availableCameras();
+                                        final firstCamera = cameras.first;
 
-                                    Navigator.of(context, rootNavigator: false)
-                                        .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            QrLokasi (camera: firstCamera),
-                                        maintainState: false));
-
-                                  }
-                                },
-                                color: MyColor.orange1,
-                                centerText: Text("Set") ,
-                                )
-                            : Center(child: Text("Lokasi Anda Sudah Di Set", style: TextStyle(fontWeight: FontWeight.w600),)),
-                              ),
+                                        Navigator.of(context,
+                                                rootNavigator: false)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) => QrLokasi(
+                                                    camera: firstCamera),
+                                                maintainState: false));
+                                      }
+                                    },
+                                    color: MyColor.orange1,
+                                    centerText: Text("Set"),
+                                  )
+                                : Center(
+                                    child: Text(
+                                    "Lokasi Anda Sudah Di Set",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  )),
+                          ),
                         ],
                       ),
                     ),

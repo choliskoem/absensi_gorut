@@ -1,13 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:absensi/common/my_color.dart';
 import 'package:absensi/services/setlokasi/setlokasiservice.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrLokasi extends StatefulWidget {
@@ -36,7 +33,6 @@ class _QrLokasiState extends State<QrLokasi> {
       // setState(() {
       //   result = scanData;
       // });
-
     });
   }
 

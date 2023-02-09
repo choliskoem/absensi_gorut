@@ -107,7 +107,7 @@ class _AbsenPageState extends State<AbsenPage> {
   Future tampil() async {
     String unit;
     String nama;
-    var bio =BiodataService();
+    var bio = BiodataService();
 
     bio.unitkerja().then((value) {
       unit = value!['unitKerja'].toString();
@@ -228,9 +228,10 @@ class _AbsenPageState extends State<AbsenPage> {
     //   _isButtonDisabled = true;
     // }
   }
+
   void requestLocationPermission() async {
     PermissionStatus permission =
-    await LocationPermissions().requestPermissions();
+        await LocationPermissions().requestPermissions();
   }
 
   void initState() {
