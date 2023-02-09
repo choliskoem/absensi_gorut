@@ -21,62 +21,13 @@ class Navigasi extends StatefulWidget {
 }
 
 class _NavigasiState extends State<Navigasi> {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/config.json');
-  }
+
   bool ActiveConnection = false;
 
-  Future CheckUserConeection() async {
-
-    try {
-      final result = await InternetAddress.lookup('absensi.gorutkab.go.id');
-      if (result.isNotEmpty &&
-          result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          ActiveConnection = true;
-          // Fluttertoast.showToast(msg: "Online");
-        });
-      }
-    } on SocketException catch (_) {
-      setState(() {
-        ActiveConnection = false;
-        // Fluttertoast.showToast(msg: "Offline");
-      });
-    }
-  }
-
-  String? status;
-  void checkstatusconfig() async {
-    String _status = "";
-    final path = await _localPath;
-    try{
-      final file = File('$path/config.json');
-      final String response = await file.readAsString();
-      Codec<String, String> stringToBase64 = utf8.fuse(base64);
-      String decoded = stringToBase64.decode(response);
-      String decoded2 = stringToBase64.decode(decoded);
-      final data = await json.decode(decoded2);
-      _status = data["status"] ;
 
 
 
-      setState(() {
-        status = _status;
-
-      });
-    }catch (e){
-      status ="online";
-    }
-
-
-
-  }
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -91,8 +42,7 @@ class _NavigasiState extends State<Navigasi> {
   void initState() {
     super.initState();
 
-    CheckUserConeection();
-checkstatusconfig();
+
 
 
 
@@ -102,7 +52,7 @@ checkstatusconfig();
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
-    bool isonline = status == "online";
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

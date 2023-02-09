@@ -35,17 +35,21 @@ class _AbsenPageState extends State<AbsenPage> {
   String? _longitude;
   bool? _isMockLocation;
   AnimationController? controller;
-  Future<void> getLocation() async {
-    try {
-      TrustLocation.onChange.listen((values) => setState(() {
-        _latitude = values.latitude;
-        _longitude = values.longitude;
-        _isMockLocation = values.isMockLocation;
-      }));
-    } on PlatformException catch (e) {
-      print('PlatformException $e');
-    }
-  }
+
+  // Future<void> getLocation() async {
+  //   try {
+  //
+  //       TrustLocation.onChange.listen((values) => setState(() {
+  //             _latitude = values.latitude;
+  //             _longitude = values.longitude;
+  //             _isMockLocation = values.isMockLocation;
+  //           }));
+  //
+  //   } on PlatformException catch (e) {
+  //     print('PlatformException $e');
+  //   }
+  // }
+
   Future _refresh() async {
     await Future.delayed(Duration(seconds: 2));
     setState(() {
@@ -100,10 +104,10 @@ class _AbsenPageState extends State<AbsenPage> {
     });
   }
 
-  void tampil() {
+  Future tampil() async {
     String unit;
     String nama;
-    var bio = BiodataService();
+    var bio =BiodataService();
 
     bio.unitkerja().then((value) {
       unit = value!['unitKerja'].toString();
@@ -224,13 +228,14 @@ class _AbsenPageState extends State<AbsenPage> {
     //   _isButtonDisabled = true;
     // }
   }
+  void requestLocationPermission() async {
+    PermissionStatus permission =
+    await LocationPermissions().requestPermissions();
+  }
 
   void initState() {
     super.initState();
     _asyncMethod();
-    requestLocationPermission();
-    TrustLocation.start(1);
-    getLocation();
     CheckUserConeection();
     _getId();
     tampil();
@@ -239,11 +244,6 @@ class _AbsenPageState extends State<AbsenPage> {
     package();
   }
 
-  void requestLocationPermission() async {
-    PermissionStatus permission =
-    await LocationPermissions().requestPermissions();
-    print('permissions: $permission');
-  }
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
@@ -277,9 +277,12 @@ class _AbsenPageState extends State<AbsenPage> {
                     child: RichText(
                       text: TextSpan(
                         text: box.read("nik"),
-                        style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600 ),
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w600),
                         children: <TextSpan>[
-                          TextSpan(text: '- $Nama', style: TextStyle(fontWeight: FontWeight.w600)),
+                          TextSpan(
+                              text: '- $Nama',
+                              style: TextStyle(fontWeight: FontWeight.w600)),
                         ],
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -371,33 +374,37 @@ class _AbsenPageState extends State<AbsenPage> {
                           const Text('Presensi',
                               style: TextStyle(fontWeight: FontWeight.w700)),
                           Row(
-                             mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: ElevatedButton(
-
-                                  onPressed: () async{
-                                    var position = await Geolocator.getCurrentPosition(
-                                        desiredAccuracy: LocationAccuracy.high);
+                                  onPressed: () async {
+                                    var position =
+                                        await Geolocator.getCurrentPosition(
+                                            desiredAccuracy:
+                                                LocationAccuracy.high);
                                     String lat = position.latitude.toString();
                                     String lot = position.longitude.toString();
-                                    String url = "https://maps.google.com/?q=$lat,$lot" ;
+                                    String url =
+                                        "https://maps.google.com/?q=$lat,$lot";
 
                                     Navigator.of(context, rootNavigator: false)
                                         .push(MaterialPageRoute(
-                                        builder: (context) => MapsPage(
-                                          value: url,
-                                        ),
-                                        maintainState: false));
-
-
-                                  }, child: Icon(Icons.location_on), style: ElevatedButton.styleFrom(
-                                primary: MyColor.orange1,
-                                shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50.0),
-                    ),
-                  ),),
+                                            builder: (context) => MapsPage(
+                                                  value: url,
+                                                ),
+                                            maintainState: false));
+                                  },
+                                  child: Icon(Icons.location_on),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: MyColor.orange1,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                    ),
+                                  ),
+                                ),
                               )
                             ],
                           )
@@ -428,21 +435,20 @@ class _AbsenPageState extends State<AbsenPage> {
                     padding: const EdgeInsets.symmetric(vertical: 25),
                     child: Column(
                       children: [
-                         Column(
-                            children: [
-                              Visibility(
-                                visible: buttondisabledharian!,
-                                child: Container(child: Text("Absen Harian")),
-                              ),
-                            ],
-                          ),
-
+                        Column(
+                          children: [
+                            Visibility(
+                              visible: buttondisabledharian!,
+                              child: Container(child: Text("Absen Harian")),
+                            ),
+                          ],
+                        ),
                         Visibility(
                           visible: buttondisabledharian!,
                           child: MyButton(
                             onTap: () async {
                               if (_isButtonDisabled!) {
-                                if(_isMockLocation == true) {
+                                if (_isMockLocation == true) {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -462,17 +468,16 @@ class _AbsenPageState extends State<AbsenPage> {
                                           ],
                                         );
                                       });
-                                }else {
+                                } else {
                                   final cameras = await availableCameras();
                                   final firstCamera = cameras.first;
 
                                   Navigator.of(context, rootNavigator: false)
                                       .pushReplacement(MaterialPageRoute(
-                                      builder: (context) =>
-                                          SecondPage(camera: firstCamera),
-                                      maintainState: false));
+                                          builder: (context) =>
+                                              SecondPage(camera: firstCamera),
+                                          maintainState: false));
                                 }
-
                               }
                             },
                             color: _isButtonDisabled!
@@ -488,14 +493,14 @@ class _AbsenPageState extends State<AbsenPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                       Column(
-                            children: [
-                              Visibility(
-                                  visible: buttondisabledluar!,
-                                  child: Container(child: Text("Absen Tugas Luar"))),
-                            ],
-                          ),
-
+                        Column(
+                          children: [
+                            Visibility(
+                                visible: buttondisabledluar!,
+                                child:
+                                    Container(child: Text("Absen Tugas Luar"))),
+                          ],
+                        ),
                         Visibility(
                           visible: buttondisabledluar!,
                           child: MyButton(
@@ -503,10 +508,11 @@ class _AbsenPageState extends State<AbsenPage> {
                               if (_isButtonDisabledLuar!) {
                                 final cameras = await availableCameras();
                                 await availableCameras().then((value) =>
-                                Navigator.of(context, rootNavigator: false)
-                                    .pushReplacement(MaterialPageRoute(
-                                  builder: (context) =>  TugasLuar(camera: cameras),
-                                )));
+                                    Navigator.of(context, rootNavigator: false)
+                                        .pushReplacement(MaterialPageRoute(
+                                      builder: (context) =>
+                                          TugasLuar(camera: cameras),
+                                    )));
                               }
                             },
                             color: _isButtonDisabledLuar!
@@ -551,15 +557,13 @@ class _AbsenPageState extends State<AbsenPage> {
                         SizedBox(
                           height: 20,
                         ),
-
-                          Column(
-                            children: [
-                              Visibility(
-                                  visible: buttonsakitdisabled!,
-                                  child: Container(child: Text("Absen Sakit"))),
-                            ],
-                          ),
-
+                        Column(
+                          children: [
+                            Visibility(
+                                visible: buttonsakitdisabled!,
+                                child: Container(child: Text("Absen Sakit"))),
+                          ],
+                        ),
                         Visibility(
                           visible: buttonsakitdisabled!,
                           child: MyButton(
@@ -584,7 +588,9 @@ class _AbsenPageState extends State<AbsenPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 50,),
+                        SizedBox(
+                          height: 50,
+                        ),
                         Container(
                           child: Text('Version : $_versionapp'),
                         ),
@@ -599,15 +605,12 @@ class _AbsenPageState extends State<AbsenPage> {
       ),
     );
   }
-  // @override
-  // void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  //   super.debugFillProperties(properties);
-  //   properties.add(StringProperty('_longitude', _longitude));
-  // }
+// @override
+// void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+//   super.debugFillProperties(properties);
+//   properties.add(StringProperty('_longitude', _longitude));
+// }
 }
-
-
-
 
 // showDialog(context: context, builder: (BuildContext context){
 // return AlertDialog(
@@ -620,4 +623,3 @@ class _AbsenPageState extends State<AbsenPage> {
 // ],
 // );
 // });
-

@@ -9,8 +9,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.CAMERA"/>
    <application
+
        android:usesCleartextTraffic="true"
        android:requestLegacyExternalStorage="true"
+       android:hardwareAccelerated="true"
         android:label="absensi mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">

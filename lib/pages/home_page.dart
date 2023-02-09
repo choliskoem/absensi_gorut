@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:absensi/common/my_color.dart';
+import 'package:absensi/helper/helper.dart';
 import 'package:absensi/offline/absen_page_offline.dart';
 import 'package:absensi/offline/configpage.dart';
 import 'package:absensi/pages/absen_page.dart';
@@ -112,12 +113,12 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
-                   Image.network(
-                          '$UrlGambar',
-                          fit: BoxFit.fill,
-                          width: 250,
-                          height: 110,
-                        )
+                  Image.network(
+                    '$UrlGambar',
+                    fit: BoxFit.fill,
+                    width: 250,
+                    height: 110,
+                  )
                   ,
                   SizedBox(
                     height: 5,
@@ -163,17 +164,17 @@ class _HomePageState extends State<HomePage> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               foregroundColor:
-                                  Theme.of(context).colorScheme.onPrimary,
+                              Theme.of(context).colorScheme.onPrimary,
                               backgroundColor: MyColor.orange1,
                             ).copyWith(
                                 elevation: ButtonStyleButton.allOrNull(0.0)),
                             onPressed: () {
                               Navigator.of(context, rootNavigator: false)
                                   .push(MaterialPageRoute(
-                                      builder: (context) => WebViewExample(
-                                            value: UrlBerita,
-                                          ),
-                                      maintainState: false));
+                                  builder: (context) => WebViewExample(
+                                    value: UrlBerita,
+                                  ),
+                                  maintainState: false));
                             },
                             child: const Text(
                               'Selengkapnya',
@@ -216,10 +217,10 @@ class _HomePageState extends State<HomePage> {
               if (url != '') {
                 Navigator.of(context, rootNavigator: false)
                     .push(MaterialPageRoute(
-                        builder: (context) => PdfView(
-                              value: "$url",
-                            ),
-                        maintainState: false));
+                    builder: (context) => PdfView(
+                      value: "$url",
+                    ),
+                    maintainState: false));
               }
             },
             child: Card(
@@ -307,10 +308,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future _refresh() async {
-    _filePath = await _localFile;
-    _filexists = await _filePath!.exists();
+
+    await Helper().read().then((value) {
+      setState(() {
+        _filexists = value;
+      });
+    });
     await Future.delayed(Duration(seconds: 2));
-    await CheckUserConeection();
+   await Helper().CheckUserConeection().then((value) {
+      setState(() {
+        ActiveConnection = value!;
+      });
+    });
     setState(() {
       if (ActiveConnection == true) {
         Navigator.pushReplacement(context,
@@ -336,51 +345,25 @@ class _HomePageState extends State<HomePage> {
     return directory.path;
   }
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/config.json');
-  }
-
-  void checkstatusconfig() async {
-    String _status = "";
-    final path = await _localPath;
-    try {
-      final file = File('$path/config.json');
-      final String response = await file.readAsString();
-      Codec<String, String> stringToBase64 = utf8.fuse(base64);
-      String decoded = stringToBase64.decode(response);
-      String decoded2 = stringToBase64.decode(decoded);
-      final data = await json.decode(decoded2);
-      _status = data["status"];
-
+  Future _Helper() async {
+    Helper().CheckUserConeection().then((value) {
       setState(() {
-        status = _status;
+        ActiveConnection = value!;
       });
-    } catch (e) {
-      status = "online";
-    }
-  }
 
-  Future CheckUserConeection() async {
-    try {
-      final result = await InternetAddress.lookup('absensi.gorutkab.go.id');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          ActiveConnection = true;
-          // Fluttertoast.showToast(msg: "Online");
-        });
-      }
-    } on SocketException catch (_) {
+    });
+    Helper().checkstatusconfig().then((value) {
       setState(() {
-        ActiveConnection = false;
-        // Fluttertoast.showToast(msg: "$ActiveConnection");
+        status = value;
       });
-    }
+
+
+    });
+
   }
 
   Future<void> readJson() async {
     final path = await _localPath;
-
     final storage = GetStorage();
     final file = File('$path/config.json');
     final String response = await file.readAsString();
@@ -409,8 +392,7 @@ class _HomePageState extends State<HomePage> {
     HakAksesMobile();
     HakAksesWeb();
     tampildataKegiatan();
-    CheckUserConeection();
-    checkstatusconfig();
+    _Helper();
     _getId();
     readJson();
   }
@@ -461,11 +443,11 @@ class _HomePageState extends State<HomePage> {
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.of(context,
-                                              rootNavigator: false)
+                                          rootNavigator: false)
                                           .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AbsenPage(),
-                                              maintainState: false));
+                                          builder: (context) =>
+                                          const AbsenPage(),
+                                          maintainState: false));
                                     },
                                     child: Ink(
                                       height: 100,
@@ -481,7 +463,7 @@ class _HomePageState extends State<HomePage> {
                                         shadowColor: Colors.white,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: const [
                                             Icon(
                                               FluentIcons
@@ -508,12 +490,12 @@ class _HomePageState extends State<HomePage> {
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.of(context,
-                                              rootNavigator: false)
+                                          rootNavigator: false)
                                           .push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const RekapAbsen(),
-                                                  maintainState: false));
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              const RekapAbsen(),
+                                              maintainState: false));
                                     },
                                     child: Container(
                                       height: 100,
@@ -529,7 +511,7 @@ class _HomePageState extends State<HomePage> {
                                         shadowColor: Colors.white,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: const [
                                             Icon(
                                               FluentIcons
@@ -556,12 +538,12 @@ class _HomePageState extends State<HomePage> {
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.of(context,
-                                              rootNavigator: false)
+                                          rootNavigator: false)
                                           .push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AbsenTeman(),
-                                                  maintainState: false));
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AbsenTeman(),
+                                              maintainState: false));
                                     },
                                     child: Container(
                                       height: 100,
@@ -577,7 +559,7 @@ class _HomePageState extends State<HomePage> {
                                         shadowColor: Colors.white,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: const [
                                             Icon(
                                               FluentIcons.people_add_24_filled,
@@ -603,10 +585,10 @@ class _HomePageState extends State<HomePage> {
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.of(context,
-                                              rootNavigator: false)
+                                          rootNavigator: false)
                                           .push(MaterialPageRoute(
-                                              builder: (context) => SetLokasi(),
-                                              maintainState: false));
+                                          builder: (context) => SetLokasi(),
+                                          maintainState: false));
                                     },
                                     child: Container(
                                       height: 100,
@@ -622,7 +604,7 @@ class _HomePageState extends State<HomePage> {
                                         shadowColor: Colors.white,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: const [
                                             Icon(
                                               FluentIcons.location_20_filled,
@@ -652,7 +634,7 @@ class _HomePageState extends State<HomePage> {
                                       Navigator.of(context, rootNavigator: true)
                                           .push(MaterialPageRoute(
                                         builder: (context) =>
-                                            const QrCodePage(),
+                                        const QrCodePage(),
                                       ));
                                     },
                                     child: Container(
@@ -669,7 +651,7 @@ class _HomePageState extends State<HomePage> {
                                         shadowColor: Colors.white,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: const [
                                             Icon(
                                               FluentIcons.qr_code_24_filled,
@@ -692,7 +674,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             )
-                            ),
+                        ),
                       ],
                     ),
                   ),
@@ -728,7 +710,7 @@ class _HomePageState extends State<HomePage> {
                               scrollDirection: Axis.vertical,
                               children: tempkegiatan,
                             )
-                            ),
+                        ),
                         const SizedBox(height: 10),
                         const Text(
                           'Berita',
@@ -742,9 +724,9 @@ class _HomePageState extends State<HomePage> {
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                          // topLeft: Radius.circular(10),
-                          // topRight: Radius.circular(10),
-                          ),
+                        // topLeft: Radius.circular(10),
+                        // topRight: Radius.circular(10),
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey,
@@ -761,7 +743,7 @@ class _HomePageState extends State<HomePage> {
                             child: ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: widgets)
-                            ),
+                        ),
                       ],
                     ),
                   ),

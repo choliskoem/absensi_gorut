@@ -26,7 +26,7 @@ class _AbsenTemanState extends State<AbsenTeman> {
   DropdownModel selectedModel = new DropdownModel("Mohon tunggu", "");
   List<DropdownModel> models = [];
 
-  void _tampildata() async {
+  Future<void> _tampildata() async {
     List<DropdownModel> listData = [];
     // Map<String, String> data1 = Map();
     // data1["nik"] = "NIK";

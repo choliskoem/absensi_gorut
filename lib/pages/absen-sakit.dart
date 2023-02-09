@@ -33,7 +33,7 @@ class _AbsenSakitState extends State<AbsenSakit> {
       final image = await _cameraController.takePicture();
 
       if (!mounted) return;
-      Service service = Service();
+      Service service = await Service();
       Uint8List bytes = await image.readAsBytes();
       service.AbsenSakit(bytes).then((value) {
         Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) =>  Navigasi()));
@@ -48,15 +48,6 @@ class _AbsenSakitState extends State<AbsenSakit> {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
-
-//
-// @override
-// void frontcamera() async{
-//   final cameras = await availableCameras(); //get list of available cameras
-//   final frontCam = cameras[1];
-//
-//
-// }
 
   @override
   void initState() {

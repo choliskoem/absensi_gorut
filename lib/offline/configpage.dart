@@ -5,7 +5,6 @@ import 'package:absensi/main.dart';
 import 'package:absensi/offline/absen_page_offline.dart';
 import 'package:absensi/offline/widget/configcontainer.dart';
 import 'package:absensi/pages/navigasi.dart';
-import 'package:absensi/pages/splashscreennav.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
