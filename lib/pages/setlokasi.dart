@@ -74,9 +74,10 @@ class _SetLokasiState extends State<SetLokasi> {
                     padding: const EdgeInsets.symmetric(horizontal: 38),
                     child: Container(
                       width: 300,
-                      decoration: const BoxDecoration(
+                      decoration:  BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
+                        borderRadius: BorderRadius.circular(
+                          40
                             // topLeft: Radius.circular(10),
                             // topRight: Radius.circular(10),
                             ),

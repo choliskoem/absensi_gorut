@@ -11,6 +11,9 @@ import 'package:absensi/pages/tugasluar.dart';
 import 'package:absensi/widgets/my_appbar2.dart';
 import 'package:absensi/widgets/my_button.dart';
 import 'package:camera/camera.dart';
+import 'package:external_path/external_path.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +21,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:document_file_save_plus/document_file_save_plus.dart';
 
 const String kFileName = 'rekapan.json';
 
@@ -61,6 +65,66 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
   String? id_jenis;
   List<String> splitted = [''];
   List<String> split_ = [''];
+  Future<Directory?>? _downloadsDirectory;
+
+
+
+  Future<File?> savepermanently(File file) async {
+    String? path_;
+
+
+
+    String path;
+    path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+    final newfile = File('${path}/rekapan_${nik}_${split_[0]}.json');
+
+    return File(file.path!).copy(newfile.path);
+  }
+
+
+
+  Future Download() async {
+    final _date = DateTime.now();
+    String _waktu = _date.toString();
+    split_ = _waktu.split(' ');
+
+    String _path;
+    _path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+    final newfile = File('${_path}/rekapan_${nik}_${split_[0]}.json');
+
+    _filePath = await newfile;
+    // 0. Check whether the _file exists
+    _filexists = await _filePath!.exists();
+
+    if (_filexists == true) {
+      Fluttertoast.showToast(msg: 'data sudah terdownload');
+
+    }else{
+      final path = await _localPath;
+
+      final file = File('$path/rekapan.json');
+
+
+
+
+      await savepermanently(file);
+
+      _path = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS);
+      final newfile = File('${_path}/rekapan_${nik}_${split_[0]}.json');
+      final String _response = await newfile.readAsString();
+      Codec<String, String> stringToBase64 = utf8.fuse(base64);
+      String encode = stringToBase64.encode(_response);
+      String encode2 = stringToBase64.encode(encode);
+      newfile!.writeAsString(encode2);
+
+
+      print(2);
+
+    }
+  }
 
   Future _refresh() async {
     await Helper().read().then((value) {
@@ -236,12 +300,9 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 28),
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            // topLeft: Radius.circular(10),
-                            // topRight: Radius.circular(10),
-                            ),
+                        borderRadius: BorderRadius.circular(40),
                         boxShadow: [
                           BoxShadow(
                             color: MyColor.orange1,
@@ -287,35 +348,67 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                             ),
                           ),
                           const SizedBox(height: 30),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: MyColor.orange1,
-                              borderRadius: BorderRadius.circular(40),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 1,
-                                  // Shadow position
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 18, horizontal: 4),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    '$_presensi%',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange,
+                                    borderRadius: BorderRadius.circular(40),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 1,
+                                        // Shadow position
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 4),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          '$_presensi%',
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.orange,
+                                      borderRadius: BorderRadius.circular(40),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.grey,
+                                          blurRadius: 1,
+                                          // Shadow position
+                                        ),
+                                      ],
+                                    ),
+                                    child: IconButton( onPressed: () { Download(); }, icon: Icon(Icons.download, color: Colors.white,)))
+                              ],
                             ),
                           ),
                           const SizedBox(height: 15),
-                          const Text('Presensi',
-                              style: TextStyle(fontWeight: FontWeight.w700)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Presensi',
+                                    style: TextStyle(fontWeight: FontWeight.w700)),
+                                const Text('Download',
+                                    style: TextStyle(fontWeight: FontWeight.w700)),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -415,7 +508,8 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                             children: [
                               Visibility(
                                   visible: true,
-                                  child: Container(child: Text("Absen Tugas Luar"))),
+                                  child: Container(
+                                      child: Text("Absen Tugas Luar"))),
                             ],
                           ),
                         ),
@@ -432,14 +526,14 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                                 _file.create();
                               } else {
                                 final String response =
-                                await _file.readAsString();
+                                    await _file.readAsString();
                                 if (!response.isEmpty) {
                                   var objeklist =
-                                  json.decode(response)['data'] as List;
+                                      json.decode(response)['data'] as List;
                                   _waktuu =
-                                  objeklist[objeklist.length - 1]['waktu'];
+                                      objeklist[objeklist.length - 1]['waktu'];
                                   id_jenis = objeklist[objeklist.length - 1]
-                                  ['idjenis'];
+                                      ['idjenis'];
                                   splitted = _waktuu!.split(' ');
                                   final _date = DateTime.now();
                                   String _waktu = _date.toString();
@@ -449,8 +543,8 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                                     split_[0] == splitted[0] &&
                                     id_jenis == '2') {
                                   Fluttertoast.showToast(
-                                      msg:
-                                      "Anda Telah Selesai Melakukan Presensi Hari ini")
+                                          msg:
+                                              "Anda Telah Selesai Melakukan Presensi Hari ini")
                                       .toString();
                                 } else {
                                   await availableCameras().then((value) =>
@@ -458,11 +552,11 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) =>
-                                                  AbsenTugasLuarOffline(camera: cameras))));
+                                                  AbsenTugasLuarOffline(
+                                                      camera: cameras))));
                                 }
                               }
                               setState(() {});
-
                             },
                             color: Colors.orange,
                             centerText: Padding(
@@ -473,10 +567,37 @@ class _AbsenPageOfflineState extends State<AbsenPageOffline> {
                           ),
                         ),
                         SizedBox(
-                          height: 50,
+                          height: 60,
                         ),
+
                         Container(
-                          child: Text('Version : $_versionapp'),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    text: "SI-ABON",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w900),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: '  offline',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle: FontStyle.italic,
+                                              color: Colors.blue)),
+                                    ],
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                Text("Version : $_versionapp")
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

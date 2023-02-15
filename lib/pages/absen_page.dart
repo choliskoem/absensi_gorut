@@ -294,11 +294,9 @@ class _AbsenPageState extends State<AbsenPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 28),
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration:  BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            // topLeft: Radius.circular(10),
-                            // topRight: Radius.circular(10),
+                        borderRadius: BorderRadius.circular(40
                             ),
                         boxShadow: [
                           BoxShadow(
@@ -606,21 +604,5 @@ class _AbsenPageState extends State<AbsenPage> {
       ),
     );
   }
-// @override
-// void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-//   super.debugFillProperties(properties);
-//   properties.add(StringProperty('_longitude', _longitude));
-// }
 }
 
-// showDialog(context: context, builder: (BuildContext context){
-// return AlertDialog(
-// title: Text("Warning!!", style: TextStyle(color: Colors.red), ),
-// content: Text("Mohon Untuk Menonaktifkan Fitur Fake Gps Di Handphone Anda"),
-// actions: [
-// ElevatedButton(onPressed: (){
-// Navigator.pop(context);
-// }, child: Text("OK")),
-// ],
-// );
-// });
