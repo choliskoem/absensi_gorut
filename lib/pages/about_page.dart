@@ -126,7 +126,7 @@ class _AboutPageState extends State<AboutPage> {
                                             child: Center(
                                               child: Image(
                                                   image: AssetImage(
-                                                      'assets/images/kabgor.png'),
+                                                      'assets/images/kabgornew.png'),
                                                   height: 50),
                                             ),
                                           ),

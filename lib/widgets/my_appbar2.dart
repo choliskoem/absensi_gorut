@@ -29,7 +29,7 @@ class _MyAppBar2State extends State<MyAppBar2> {
               Row(
                 children: [
                   Image(
-                      image: AssetImage('assets/images/kabgor.png'),
+                      image: AssetImage('assets/images/kabgornew.png'),
                       height: 40),
                   Text(
                     ' Kabupaten\n Gorontalo Utara',

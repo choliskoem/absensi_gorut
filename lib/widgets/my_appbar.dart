@@ -36,7 +36,7 @@ class _MyAppBarState extends State<MyAppBar> {
                 children: [
                   // Image.network("https://rekreartive.com/wp-content/uploads/2019/03/Logo-Kabupaten-Gorontalo-Utara-INDONESIA-Original.jpg", height: 40,),
                   const Image(
-                      image: AssetImage('assets/images/kabgor.png'),
+                      image: AssetImage('assets/images/kabgornew.png'),
                       height: 40),
                   const Text(
                     ' Kabupaten\n Gorontalo Utara',
