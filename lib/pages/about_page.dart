@@ -1,8 +1,9 @@
 import 'package:absensi/widgets/my_appbar2.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-List<AssetImage> list = [const AssetImage(('assets/images/saronde.jpg'))];
+// List<AssetImage> list = [const AssetImage(('assets/images/saronde.jpg'))];
 
 class AboutPage extends StatefulWidget {
   const AboutPage({Key? key}) : super(key: key);
@@ -65,26 +66,31 @@ class _AboutPageState extends State<AboutPage> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600),
                                     ),
-                                    Card(
-                                      elevation: 8,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 5),
-                                      shape: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: const BorderSide(
-                                              color: Colors.white, width: 1)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 10),
-                                        child: Text(
-                                          'Aplikasi Pemerintah Kabupaten Gorontalo Utara Berbasis Mobile yang di  beri nama Absensi Mobile, ini merupakan aplikasi yang dikembangkan oleh pemerintah Kabupaten Gorontalo Utara pada tahun 2022.',
-                                          style: TextStyle(
-                                            fontSize: 15,
+                                    GestureDetector(
+                                      onDoubleTap: (){
+                                        Fluttertoast.showToast(msg: "msg");
+                                      },
+                                      child: Card(
+                                        elevation: 8,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        shape: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                                color: Colors.white, width: 1)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 10),
+                                          child: Text(
+                                            'Aplikasi Pemerintah Kabupaten Gorontalo Utara Berbasis Mobile yang di  beri nama Absensi Mobile, ini merupakan aplikasi yang dikembangkan oleh pemerintah Kabupaten Gorontalo Utara pada tahun 2022.',
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                            textAlign: TextAlign.justify,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 7,
                                           ),
-                                          textAlign: TextAlign.justify,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 7,
                                         ),
                                       ),
                                     ),

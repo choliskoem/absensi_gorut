@@ -23,6 +23,8 @@ class DataStatusAbsenModel {
   final int hariAktif;
   @JsonKey(name: 'presensi')
   final double presensi;
+  @JsonKey(name: 'presensiPermen')
+  final double presensiPermen;
   @JsonKey(name: 'statusAbsen')
   final bool statusAbsen;
   @JsonKey(name: 'statusAbsenLuar')
@@ -36,6 +38,7 @@ class DataStatusAbsenModel {
     required this.hariAktif,
     required this.hariEfektif,
     required this.presensi,
+    required this.presensiPermen,
     required this.statusAbsen,
     required this.statusAbsenLuar,
     required this.pesanAbsen,

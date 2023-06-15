@@ -78,6 +78,7 @@ class _AbsenPageState extends State<AbsenPage> {
   String _hariaktif = "0";
   String _hariefektif = "0";
   String? _presensi = '0.0';
+  String? _presensiPermen = '0.0';
 
   String? _deviceId;
 
@@ -215,8 +216,10 @@ class _AbsenPageState extends State<AbsenPage> {
     setState(() {
       _hariaktif = data.body!.hariAktif.toString();
       _hariefektif = data.body!.hariEfektif.toString();
-      double persen = data.body!.presensi.roundToDouble();
+      double persen = double.parse(data.body!.presensi.toStringAsFixed(2));
+      double persenPermen =double.parse(data.body!.presensiPermen.toStringAsFixed(2)) ;
       _presensi = persen.toString();
+      _presensiPermen = persenPermen.toString();
       textabsen = data.body!.pesanAbsen;
       _isButtonDisabled = data.body!.statusAbsen;
       _isButtonDisabledLuar = data.body!.statusAbsenLuar;
@@ -261,7 +264,7 @@ class _AbsenPageState extends State<AbsenPage> {
                   const SizedBox(height: 23),
                   Text(
                     'ABSEN HARI INI',
-                    style: MyTyphography.headingLarge,
+                    style: MyTyphography.headingLarge ,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -343,30 +346,70 @@ class _AbsenPageState extends State<AbsenPage> {
                             ),
                           ),
                           const SizedBox(height: 30),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: MyColor.orange1,
-                              borderRadius: BorderRadius.circular(40),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 1,
-                                  // Shadow position
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 60),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: MyColor.orange1,
+                                    borderRadius: BorderRadius.circular(40),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 1,
+                                        // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 25, horizontal: 6),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          ' $_presensi% ',
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 20),
+                                        ),
+
+                                      ],
+                                    ),
+
+                                  ),
+                                ),
+
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: MyColor.orange1,
+                                    borderRadius: BorderRadius.circular(40),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 1,
+                                        // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 25, horizontal: 4),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          ' $_presensiPermen% ',
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 20),
+                                        ),
+
+                                      ],
+                                    ),
+
+                                  ),
                                 ),
                               ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 18, horizontal: 4),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    '$_presensi%',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                ],
-                              ),
                             ),
                           ),
                           const SizedBox(height: 15),

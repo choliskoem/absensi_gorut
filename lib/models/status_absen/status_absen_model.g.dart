@@ -18,6 +18,7 @@ DataStatusAbsenModel _$DataStatusAbsenModelFromJson(Map<String, dynamic> json) =
       hariAktif: json['hariAktif'] as int,
       hariEfektif: json['hariEfektif'] as int,
       presensi:  json['presensi'] as double,
+      presensiPermen:  json['presensiPermen'] as double,
       statusAbsen: json['statusAbsen'] as bool,
       statusAbsenLuar: json['statusAbsenLuar'] as bool,
       pesanAbsen: json['pesanAbsen'] as String,
