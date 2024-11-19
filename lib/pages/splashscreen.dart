@@ -16,14 +16,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  var newpage = LoginPage();
+  var newpage = const LoginPage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: AnimatedSplashScreen(
             duration: 3000,
-            splash: Image(
+            splash: const Image(
               image: AssetImage('assets/images/group.png'),
             ),
             splashIconSize: 150,

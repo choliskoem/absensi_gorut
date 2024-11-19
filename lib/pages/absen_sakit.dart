@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:absensi/pages/home_page.dart';
 import 'package:absensi/pages/navigasi.dart';
 import 'package:absensi/services/multipart/multipart-service.dart';
 import 'package:camera/camera.dart';
@@ -37,14 +36,14 @@ class _AbsenSakitState extends State<AbsenSakit> {
       Uint8List bytes = await image.readAsBytes();
       service.AbsenSakit(bytes).then((value) {
         Navigator.of(context, rootNavigator: false).pushReplacement(
-            MaterialPageRoute(builder: (context) => Navigasi()));
+            MaterialPageRoute(builder: (context) => const Navigasi()));
       });
       setState(() {
         _loading = false;
         _cameraController.pausePreview();
       });
     } catch (e) {
-      print(e);
+      // print(e);
       Fluttertoast.showToast(msg: e.toString());
     }
   }
@@ -88,12 +87,12 @@ class _AbsenSakitState extends State<AbsenSakit> {
               ))
           : Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 250,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 38),
-                  child: WillPopScope(
+                  child: WillPopScope.new(
                     onWillPop: () async => false,
                     child: Container(
                       width: 300,
@@ -111,22 +110,22 @@ class _AbsenSakitState extends State<AbsenSakit> {
                           ),
                         ],
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 25),
+                      padding: const EdgeInsets.symmetric(vertical: 25),
                       child: Column(
                         children: <Widget>[
-                          Text(
+                          const Text(
                             "Mohon Tunggu\nSedang Diproses..",
                             style: TextStyle(fontSize: 18),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
-                          CircularProgressIndicator(
+                          const CircularProgressIndicator(
                             backgroundColor: Colors.grey,
                             color: Colors.purple,
                             strokeWidth: 5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(

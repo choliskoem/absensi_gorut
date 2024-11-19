@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:absensi/common/my_color.dart';
 import 'package:absensi/common/my_typhography.dart';
 import 'package:absensi/models/status_absen/status_absen_body.dart';
-import 'package:absensi/pages/absen-sakit.dart';
+import 'package:absensi/pages/absen_sakit.dart';
 import 'package:absensi/pages/qrcode.dart';
 import 'package:absensi/pages/tugasluar.dart';
 import 'package:absensi/services/auth/biodata_service.dart';
@@ -15,12 +15,12 @@ import 'package:absensi/widgets/my_appbar2.dart';
 import 'package:absensi/widgets/my_button.dart';
 import 'package:camera/camera.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:trust_location/trust_location.dart';
+
 import 'package:location_permissions/location_permissions.dart';
 
 class AbsenPage extends StatefulWidget {
@@ -31,8 +31,7 @@ class AbsenPage extends StatefulWidget {
 }
 
 class _AbsenPageState extends State<AbsenPage> {
-  String? _latitude;
-  String? _longitude;
+
   bool? _isMockLocation;
   AnimationController? controller;
 
@@ -51,7 +50,7 @@ class _AbsenPageState extends State<AbsenPage> {
   // }
 
   Future _refresh() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => super.widget));
@@ -256,7 +255,7 @@ class _AbsenPageState extends State<AbsenPage> {
         child: RefreshIndicator(
           onRefresh: _refresh,
           child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Container(
               child: Column(
                 children: [
@@ -270,7 +269,7 @@ class _AbsenPageState extends State<AbsenPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
                       '$UnitKerja',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -281,19 +280,19 @@ class _AbsenPageState extends State<AbsenPage> {
                     child: RichText(
                       text: TextSpan(
                         text: box.read("nik"),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black, fontWeight: FontWeight.w600),
                         children: <TextSpan>[
                           TextSpan(
                               text: '- $Nama',
-                              style: TextStyle(fontWeight: FontWeight.w600)),
+                              style: const TextStyle(fontWeight: FontWeight.w600)),
                         ],
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 28),
                     child: Container(
@@ -302,7 +301,7 @@ class _AbsenPageState extends State<AbsenPage> {
                         borderRadius: BorderRadius.circular(40
                             ),
                         boxShadow: [
-                          BoxShadow(
+                          const BoxShadow(
                             color: MyColor.orange1,
                             blurRadius: 1,
                             // Shadow position
@@ -320,13 +319,13 @@ class _AbsenPageState extends State<AbsenPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                const Text(
                                   'Hari Efektif',
                                   style: TextStyle(fontWeight: FontWeight.w700),
                                 ),
                                 Text('$_hariefektif',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.w700)),
+                                        const TextStyle(fontWeight: FontWeight.w700)),
                               ],
                             ),
                           ),
@@ -336,12 +335,12 @@ class _AbsenPageState extends State<AbsenPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Hari Aktif',
+                                const Text('Hari Aktif',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w700)),
                                 Text('$_hariaktif',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.w700)),
+                                        const TextStyle(fontWeight: FontWeight.w700)),
                               ],
                             ),
                           ),
@@ -371,7 +370,7 @@ class _AbsenPageState extends State<AbsenPage> {
                                       children: [
                                         Text(
                                           ' $_presensi% ',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               color: Colors.white, fontSize: 20),
                                         ),
 
@@ -400,7 +399,7 @@ class _AbsenPageState extends State<AbsenPage> {
                                       children: [
                                         Text(
                                           ' $_presensiPermen% ',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               color: Colors.white, fontSize: 20),
                                         ),
 
@@ -439,9 +438,9 @@ class _AbsenPageState extends State<AbsenPage> {
                                                 ),
                                             maintainState: false));
                                   },
-                                  child: Icon(Icons.location_on),
+                                  child: const Icon(Icons.location_on),
                                   style: ElevatedButton.styleFrom(
-                                    primary: MyColor.orange1,
+                                    backgroundColor: MyColor.orange1,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50.0),
                                     ),
@@ -465,10 +464,10 @@ class _AbsenPageState extends State<AbsenPage> {
                         children: [
                           Text(
                             '$year-$month-$day',
-                            style: TextStyle(fontWeight: FontWeight.w700),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                           Text('$hour:$minute',
-                              style: TextStyle(fontWeight: FontWeight.w700)),
+                              style: const TextStyle(fontWeight: FontWeight.w700)),
                         ],
                       ),
                     ),
@@ -481,7 +480,7 @@ class _AbsenPageState extends State<AbsenPage> {
                           children: [
                             Visibility(
                               visible: buttondisabledharian!,
-                              child: Container(child: Text("Absen Harian")),
+                              child: Container(child: const Text("Absen Harian")),
                             ),
                           ],
                         ),
@@ -495,18 +494,18 @@ class _AbsenPageState extends State<AbsenPage> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: Text(
+                                          title: const Text(
                                             "Warning!!",
                                             style: TextStyle(color: Colors.red),
                                           ),
-                                          content: Text(
+                                          content: const Text(
                                               "Mohon Untuk Menonaktifkan Fitur Fake Gps Di Handphone Anda"),
                                           actions: [
                                             ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                 },
-                                                child: Text("OK")),
+                                                child: const Text("OK")),
                                           ],
                                         );
                                       });
@@ -540,7 +539,7 @@ class _AbsenPageState extends State<AbsenPage> {
                             Visibility(
                                 visible: buttondisabledluar!,
                                 child:
-                                    Container(child: Text("Absen Tugas Luar"))),
+                                    Container(child: const Text("Absen Tugas Luar"))),
                           ],
                         ),
                         Visibility(
@@ -573,7 +572,7 @@ class _AbsenPageState extends State<AbsenPage> {
                             children: [
                               Visibility(
                                   visible: spt!,
-                                  child: Text("Surat Perintah Tugas")),
+                                  child: const Text("Surat Perintah Tugas")),
                             ],
                           ),
                         ),
@@ -586,24 +585,24 @@ class _AbsenPageState extends State<AbsenPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => SptPage())));
+                                          builder: (_) => const SptPage())));
                             },
                             color: MyColor.orange1,
-                            centerText: Padding(
-                              padding: const EdgeInsets.symmetric(
+                            centerText: const Padding(
+                              padding: EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 82),
                               child: Text("SPT"),
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Column(
                           children: [
                             Visibility(
                                 visible: buttonsakitdisabled!,
-                                child: Container(child: Text("Absen Sakit"))),
+                                child: Container(child: const Text("Absen Sakit"))),
                           ],
                         ),
                         Visibility(
@@ -623,14 +622,14 @@ class _AbsenPageState extends State<AbsenPage> {
                             color: _isButtonSakitDisabled!
                                 ? MyColor.orange1
                                 : Colors.grey,
-                            centerText: Padding(
-                              padding: const EdgeInsets.symmetric(
+                            centerText: const Padding(
+                              padding: EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 82),
                               child: Text("Sakit"),
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 50,
                         ),
                         Container(

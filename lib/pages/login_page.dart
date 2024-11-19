@@ -80,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
     permission = await Geolocator.requestPermission();
   }
 
+  // ignore: non_constant_identifier_names
   Widget UsernameText() {
     return TextField(
       onChanged: (text) => setState(
@@ -91,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
         hintStyle: MyTyphography.texfield,
         fillColor: Colors.white,
         filled: true,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           FluentIcons.person_20_regular,
           color: MyColor.orange1,
         ),
@@ -107,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget PasswordText() {
     return TextField(
       onChanged: (text) => setState(
@@ -118,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
         // hintStyle: MyTyphography.texfield,
         fillColor: Colors.white,
         filled: true,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           FluentIcons.lock_closed_20_regular,
           color: MyColor.orange1,
         ),
@@ -146,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget LoginButton() {
     return SizedBox(
       width: 193,
@@ -195,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text('Login', style: MyTyphography.buttontypo),
               ),
             )
-          : Center(child: CircularProgressIndicator()),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -218,23 +221,23 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Positioned(
                   height: MediaQuery.of(context).size.height / 2,
-                  child: SigninContainer()),
-              SizedBox(
+                  child: const SigninContainer()),
+              const SizedBox(
                 height: 10,
               ),
               SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         children: [
                           SizedBox(height: height * .55),
                           UsernameText(),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           PasswordText(),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           LoginButton(),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 15,
@@ -243,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               RichText(
-                                text: TextSpan(
+                                text: const TextSpan(
                                   text: "SI-ABON",
                                   style: TextStyle(
                                       color: Colors.black,

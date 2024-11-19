@@ -79,8 +79,8 @@ class _AboutPageState extends State<AboutPage> {
                                                 BorderRadius.circular(10),
                                             borderSide: const BorderSide(
                                                 color: Colors.white, width: 1)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(
                                               horizontal: 10, vertical: 10),
                                           child: Text(
                                             'Aplikasi Pemerintah Kabupaten Gorontalo Utara Berbasis Mobile yang di  beri nama Absensi Mobile, ini merupakan aplikasi yang dikembangkan oleh pemerintah Kabupaten Gorontalo Utara pada tahun 2022.',
@@ -103,8 +103,8 @@ class _AboutPageState extends State<AboutPage> {
                                               BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.white, width: 1)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 10),
                                         child: Text(
                                           'Aplikasi Absensi berbasis Mobile ini meliputi Absen Harian, Absen Tugas Luar, Absen Teman, dan Absen Sakit. Absensi Mobile bertujuan sebagai sarana untuk meningkatkan tingkat kedisiplinan pegawai. ',
@@ -124,10 +124,10 @@ class _AboutPageState extends State<AboutPage> {
                                               BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.white, width: 1)),
-                                      child: Column(
+                                      child: const Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(
+                                            padding: EdgeInsets.symmetric(
                                                 vertical: 15),
                                             child: Center(
                                               child: Image(
@@ -137,7 +137,7 @@ class _AboutPageState extends State<AboutPage> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(
+                                            padding: EdgeInsets.symmetric(
                                                 vertical: 10),
                                             child: Center(
                                               child: Text(

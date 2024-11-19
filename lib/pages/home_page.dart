@@ -103,14 +103,14 @@ class _HomePageState extends State<HomePage> {
             width: 300,
             child: Card(
               color: Colors.white70,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(9),
                 ),
               ),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Image.network(
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                     height: 110,
                   )
                   ,
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Padding(
@@ -128,20 +128,20 @@ class _HomePageState extends State<HomePage> {
                     child: Text(
                       '$Judul',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: MyColor.orange1,
                           fontWeight: FontWeight.w800,
                           fontSize: 10),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       '$Deskripsi',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                       maxLines: 3,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Padding(
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("$Waktu", style: TextStyle(fontSize: 8)),
+                        Text("$Waktu", style: const TextStyle(fontSize: 8)),
                         SizedBox(
                           width: 120,
                           height: 30,
@@ -224,14 +224,14 @@ class _HomePageState extends State<HomePage> {
               }
             },
             child: Card(
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(9),
                 ),
               ),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Padding(
@@ -245,12 +245,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(
                         "$Judul",
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -314,7 +314,7 @@ class _HomePageState extends State<HomePage> {
         _filexists = value;
       });
     });
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
    await Helper().CheckUserConeection().then((value) {
       setState(() {
         ActiveConnection = value!;
@@ -323,18 +323,18 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (ActiveConnection == true) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => Navigasi()));
+            MaterialPageRoute(builder: (BuildContext context) => const Navigasi()));
       } else {
         if (_filexists == false && ActiveConnection == false) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => ConfigPage()));
+                  builder: (BuildContext context) => const ConfigPage()));
         } else {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => AbsenPageOffline()));
+                  builder: (BuildContext context) => const AbsenPageOffline()));
         }
       }
     });
@@ -404,7 +404,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.blue,
             onRefresh: _refresh,
             child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   const MyAppBar(),
@@ -448,8 +448,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Ink(
                                       height: 100,
                                       width: 100,
-                                      child: Card(
-                                        shape: const RoundedRectangleBorder(
+                                      child: const Card(
+                                        shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(9),
                                           ),
@@ -460,7 +460,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(
                                               FluentIcons
                                                   .calendar_day_24_filled,
@@ -496,8 +496,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Container(
                                       height: 100,
                                       width: 100,
-                                      child: Card(
-                                        shape: const RoundedRectangleBorder(
+                                      child: const Card(
+                                        shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(9),
                                           ),
@@ -508,7 +508,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(
                                               FluentIcons
                                                   .document_text_24_filled,
@@ -538,14 +538,14 @@ class _HomePageState extends State<HomePage> {
                                           .push(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  AbsenTeman(),
+                                                  const AbsenTeman(),
                                               maintainState: false));
                                     },
                                     child: Container(
                                       height: 100,
                                       width: 100,
-                                      child: Card(
-                                        shape: const RoundedRectangleBorder(
+                                      child: const Card(
+                                        shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(9),
                                           ),
@@ -556,7 +556,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(
                                               FluentIcons.people_add_24_filled,
                                               size: 30,
@@ -583,14 +583,14 @@ class _HomePageState extends State<HomePage> {
                                       Navigator.of(context,
                                           rootNavigator: false)
                                           .push(MaterialPageRoute(
-                                          builder: (context) => SetLokasi(),
+                                          builder: (context) => const SetLokasi(),
                                           maintainState: false));
                                     },
                                     child: Container(
                                       height: 100,
                                       width: 100,
-                                      child: Card(
-                                        shape: const RoundedRectangleBorder(
+                                      child: const Card(
+                                        shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(9),
                                           ),
@@ -601,7 +601,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(
                                               FluentIcons.location_20_filled,
                                               size: 30,
@@ -636,8 +636,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Container(
                                       height: 100,
                                       width: 100,
-                                      child: Card(
-                                        shape: const RoundedRectangleBorder(
+                                      child: const Card(
+                                        shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(9),
                                           ),
@@ -648,7 +648,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(
                                               FluentIcons.qr_code_24_filled,
                                               size: 30,
@@ -676,7 +676,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: MyColor.orange1,
                       // : Colors.orange,
                       borderRadius: BorderRadius.only(

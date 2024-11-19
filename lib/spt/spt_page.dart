@@ -3,7 +3,6 @@ import 'package:absensi/spt/sptdepan.dart';
 import 'package:absensi/widgets/my_appbar2.dart';
 import 'package:camera/camera.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SptPage extends StatefulWidget {
@@ -25,8 +24,8 @@ class _SptPageState extends State<SptPage> {
         child : SingleChildScrollView(
           child: Column(
             children: [
-              MyAppBar2(),
-              SizedBox(height: 20),
+              const MyAppBar2(),
+              const SizedBox(height: 20),
               Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -65,8 +64,8 @@ class _SptPageState extends State<SptPage> {
                           child: Ink(
                             height: 100,
                             width: 150,
-                            child: Card(
-                              shape: const RoundedRectangleBorder(
+                            child: const Card(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(9),
                                 ),
@@ -77,7 +76,7 @@ class _SptPageState extends State<SptPage> {
                               child: Column(
                                 mainAxisAlignment:
                                 MainAxisAlignment.center,
-                                children: const [
+                                children: [
                                   Icon(
                                     FluentIcons
                                         .camera_24_filled,
@@ -114,8 +113,8 @@ class _SptPageState extends State<SptPage> {
                           child: Ink(
                             height: 100,
                             width: 150,
-                            child: Card(
-                              shape: const RoundedRectangleBorder(
+                            child: const Card(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(9),
                                 ),
@@ -126,7 +125,7 @@ class _SptPageState extends State<SptPage> {
                               child: Column(
                                 mainAxisAlignment:
                                 MainAxisAlignment.center,
-                                children: const [
+                                children: [
                                   Icon(
                                     FluentIcons
                                         .camera_24_filled,
@@ -163,8 +162,8 @@ class _SptPageState extends State<SptPage> {
                           child: Ink(
                             height: 100,
                             width: 150,
-                            child: Card(
-                              shape: const RoundedRectangleBorder(
+                            child: const Card(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(9),
                                 ),
@@ -175,7 +174,7 @@ class _SptPageState extends State<SptPage> {
                               child: Column(
                                 mainAxisAlignment:
                                 MainAxisAlignment.center,
-                                children: const [
+                                children: [
                                   Icon(
                                     FluentIcons
                                         .camera_24_filled,
@@ -237,9 +236,9 @@ class _SptPageState extends State<SptPage> {
                           child: Container(
                             width: width/1.2,
 
-                            padding: EdgeInsets.all(3),
+                            padding: const EdgeInsets.all(3),
 
-                            child: Column(
+                            child: const Column(
                               children: [
                                 Text("Tampak Depan"),
                                 Image(
@@ -255,9 +254,9 @@ class _SptPageState extends State<SptPage> {
                         child: Container(
                           width: width/1.2,
 
-                          padding: EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(3),
 
-                          child: Column(
+                          child: const Column(
                             children: [
                               Text("Tampak Samping"),
                               Image(
@@ -273,9 +272,9 @@ class _SptPageState extends State<SptPage> {
                         child: Container(
                           width: width/1.2,
 
-                          padding: EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(3),
 
-                          child: Column(
+                          child: const Column(
                             children: [
                               Text("Tampak Jauh"),
                               Image(

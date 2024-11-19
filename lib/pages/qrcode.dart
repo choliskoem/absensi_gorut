@@ -182,7 +182,7 @@ class _SecondPageState extends State<SecondPage> {
             Container(
               margin: const EdgeInsets.all(8),
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: MyColor.orange1),
+                style: ElevatedButton.styleFrom(backgroundColor: MyColor.orange1),
                 onPressed: () async {
                   await controller?.resumeCamera();
                 },

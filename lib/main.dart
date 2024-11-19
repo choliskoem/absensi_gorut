@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:absensi/helper/helper.dart';
@@ -26,7 +26,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp( MyApp());
+  runApp( const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -37,8 +37,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool ActiveConnection = false ;
-  File? _filePath;
+  bool activeConnection = false ;
+  // File? _filePath;
   bool _filexists = false;
   String? status  ;
   // Future checkstatusconfig() async {
@@ -107,10 +107,10 @@ class _MyAppState extends State<MyApp> {
   // }
   //
 
-  Future _Helper() async {
+  Future helper() async {
     Helper().CheckUserConeection().then((value) {
       setState(() {
-        ActiveConnection = value!;
+        activeConnection = value!;
       });
 
     });
@@ -137,13 +137,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
    //  CheckUserConeection();
    //  read();
    // checkstatusconfig();
 
-    _Helper();
+    helper();
 
 
   }
@@ -160,13 +160,13 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: ActiveConnection  && isonline
+      home: activeConnection  && isonline
           ? isLogin
-              ? SplashScreen(value: Navigasi())
-              : SplashScreen(value: LoginPage())
+              ? SplashScreen(value: const Navigasi())
+              : SplashScreen(value: const LoginPage())
           : _filexists
-              ? SplashScreen(value: AbsenPageOffline())
-              : SplashScreen(value: ConfigPage()),
+              ? SplashScreen(value: const AbsenPageOffline())
+              : SplashScreen(value: const ConfigPage()),
     );
   }
 }

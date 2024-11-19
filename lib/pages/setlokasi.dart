@@ -21,7 +21,7 @@ class _SetLokasiState extends State<SetLokasi> {
   String? message;
 
   Future _refresh() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => super.widget));
@@ -50,7 +50,7 @@ class _SetLokasiState extends State<SetLokasi> {
 
   @override
   void initState() {
-    // TODO: implement initState
+ 
     super.initState();
     status();
   }
@@ -62,12 +62,12 @@ class _SetLokasiState extends State<SetLokasi> {
         child: RefreshIndicator(
           onRefresh: _refresh,
           child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Container(
               child: Column(
                 children: [
-                  MyAppBar2(),
-                  SizedBox(
+                  const MyAppBar2(),
+                  const SizedBox(
                     height: 250,
                   ),
                   Padding(
@@ -81,7 +81,7 @@ class _SetLokasiState extends State<SetLokasi> {
                             // topLeft: Radius.circular(10),
                             // topRight: Radius.circular(10),
                             ),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: MyColor.orange1,
                             blurRadius: 1,
@@ -89,23 +89,23 @@ class _SetLokasiState extends State<SetLokasi> {
                           ),
                         ],
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 25),
+                      padding: const EdgeInsets.symmetric(vertical: 25),
                       child: Column(
                         children: <Widget>[
-                          Icon(
+                          const Icon(
                             FluentIcons.location_20_filled,
                             size: 100,
                             color: MyColor.orange1,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
-                          Text(
+                          const Text(
                             "SET LOKASI",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w600),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(
@@ -127,9 +127,9 @@ class _SetLokasiState extends State<SetLokasi> {
                                       }
                                     },
                                     color: MyColor.orange1,
-                                    centerText: Text("Set"),
+                                    centerText: const Text("Set"),
                                   )
-                                : Center(
+                                : const Center(
                                     child: Text(
                                     "Lokasi Anda Sudah Di Set",
                                     style:

@@ -54,7 +54,7 @@ class _QrLokasiState extends State<QrLokasi> {
         loading = false;
       });
     } catch (e) {
-      print(e);
+      // print(e);
       Fluttertoast.showToast(msg: e.toString());
     }
   }
@@ -103,14 +103,14 @@ class _QrLokasiState extends State<QrLokasi> {
                     )
                   : Column(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 250,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 38),
                           child: Container(
                             width: 300,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
                                   // topLeft: Radius.circular(10),
@@ -124,22 +124,22 @@ class _QrLokasiState extends State<QrLokasi> {
                                 ),
                               ],
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 25),
+                            padding: const EdgeInsets.symmetric(vertical: 25),
                             child: Column(
                               children: <Widget>[
-                                Text(
+                                const Text(
                                   "Mohon Tunggu\nSedang Diproses..",
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
-                                CircularProgressIndicator(
+                                const CircularProgressIndicator(
                                   backgroundColor: Colors.grey,
                                   color: Colors.purple,
                                   strokeWidth: 5,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Container(
@@ -155,7 +155,7 @@ class _QrLokasiState extends State<QrLokasi> {
             Container(
               margin: const EdgeInsets.all(8),
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: MyColor.orange1),
+                style: ElevatedButton.styleFrom(backgroundColor: MyColor.orange1),
                 onPressed: () async {
                   await controller?.resumeCamera();
                 },

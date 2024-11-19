@@ -26,19 +26,19 @@ class _MyAppBarState extends State<MyAppBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
               Row(
                 children: [
                   // Image.network("https://rekreartive.com/wp-content/uploads/2019/03/Logo-Kabupaten-Gorontalo-Utara-INDONESIA-Original.jpg", height: 40,),
-                  const Image(
+                  Image(
                       image: AssetImage('assets/images/kabgornew.png'),
                       height: 40),
-                  const Text(
+                  Text(
                     ' Kabupaten\n Gorontalo Utara',
                     style: TextStyle(fontWeight: FontWeight.w700),
                   ),
@@ -57,10 +57,10 @@ class _MyAppBarState extends State<MyAppBar> {
                     color: MyColor.orange1,
                   ),
                   isExpanded: true,
-                  hint: Text("Menu"),
+                  hint: const Text("Menu"),
                   icon: const Icon(Icons.list),
-                  items: [
-                    const DropdownMenuItem(value: 'Ubah Password', child: Text('Ubah Password',  overflow: TextOverflow.ellipsis,
+                  items: const [
+                    DropdownMenuItem(value: 'Ubah Password', child: Text('Ubah Password',  overflow: TextOverflow.ellipsis,
                         maxLines: 1)),
                     // const DropdownMenuItem(value: 'Logout', child: Text('Logout',  overflow: TextOverflow.ellipsis,
                     //     maxLines: 1)),
@@ -71,7 +71,7 @@ class _MyAppBarState extends State<MyAppBar> {
                       case 'Ubah Password' :
                         Navigator.of(context, rootNavigator: true)
                             .push(MaterialPageRoute(
-                            builder: (context) => ChangePass(),
+                            builder: (context) => const ChangePass(),
                             maintainState: false));
                         break;
                       // case 'Logout':

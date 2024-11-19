@@ -18,10 +18,12 @@ class AuthService {
       //404
       var res = await dio.post("http://$url/auth/login",
           data: {"email": email, "password": password, "deviceId": deviceId});
+
       String nik = res.data['body']['nik'];
       String kdUser = res.data['body']['kdUser'];
       box.write("nik", nik);
       box.write("kdUser", kdUser);
+      
       return res.data;
     } on DioError catch (e) {
       return e.response!.data;

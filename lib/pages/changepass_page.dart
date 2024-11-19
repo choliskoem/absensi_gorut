@@ -51,7 +51,7 @@ class _ChangePassState extends State<ChangePass> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(
+                  const Icon(
                     FluentIcons.person_lock_20_filled,
                     size: 100,
                     color: MyColor.orange1,
@@ -77,7 +77,7 @@ class _ChangePassState extends State<ChangePass> {
                       // hintStyle: MyTyphography.texfield,
                       fillColor: Colors.white,
                       filled: true,
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         FluentIcons.lock_closed_20_regular,
                         color: MyColor.orange1,
                       ),
@@ -119,7 +119,7 @@ class _ChangePassState extends State<ChangePass> {
                       // hintStyle: MyTyphography.texfield,
                       fillColor: Colors.white,
                       filled: true,
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         FluentIcons.lock_closed_20_regular,
                         color: MyColor.orange1,
                       ),
@@ -196,7 +196,7 @@ class _ChangePassState extends State<ChangePass> {
                                   Text('Ubah', style: MyTyphography.buttontypo),
                             ),
                           )
-                        : Center(child: CircularProgressIndicator()),
+                        : const Center(child: CircularProgressIndicator()),
                   ),
                 ],
               ),

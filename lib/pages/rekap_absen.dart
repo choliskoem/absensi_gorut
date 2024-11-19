@@ -18,10 +18,10 @@ class _RekapAbsenState extends State<RekapAbsen> {
   final box = GetStorage();
 
   Future _refresh() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => RekapAbsen()));
+          MaterialPageRoute(builder: (BuildContext context) => const RekapAbsen()));
     });
   }
 
@@ -56,17 +56,17 @@ class _RekapAbsenState extends State<RekapAbsen> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text(
+                title: const Text(
                   "Perhatian!!",
                   style: TextStyle(color: Colors.red),
                 ),
-                content: Text("Anda belum melakukan absensi untuk bulan ini."),
+                content: const Text("Anda belum melakukan absensi untuk bulan ini."),
                 actions: [
                   ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text("OK")),
+                      child: const Text("OK")),
                 ],
               );
             });
@@ -246,7 +246,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
             height: 160,
             child: Card(
               color: Colors.white,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 side: BorderSide(
                   color: MyColor.orange1,
                 ),
@@ -259,17 +259,17 @@ class _RekapAbsenState extends State<RekapAbsen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Masuk"),
                         Text("Keluar"),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -280,7 +280,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
                         iconButtonkeluar!,
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -310,21 +310,21 @@ class _RekapAbsenState extends State<RekapAbsen> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            MyAppBar2(),
-            SizedBox(
+            const MyAppBar2(),
+            const SizedBox(
               height: 10,
             ),
             Center(
               child: Text('Detail Absen Bulan Ini',
                   style: MyTyphography.headingsplash),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
@@ -403,7 +403,7 @@ class _RekapAbsenState extends State<RekapAbsen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             RefreshIndicator(

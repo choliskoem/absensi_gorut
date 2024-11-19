@@ -15,8 +15,8 @@ class _MyAppBar2State extends State<MyAppBar2> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 19),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 19),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

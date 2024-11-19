@@ -20,7 +20,7 @@ class SigninContainer extends StatelessWidget {
             clipper: WaveClipperThree(),
             child: Container(
               width: MediaQuery.of(context).size.width * 1.2,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color.fromRGBO(255, 131, 0, 1),
               ),
             ),
@@ -31,18 +31,18 @@ class SigninContainer extends StatelessWidget {
           child: Container(
               height: MediaQuery.of(context).size.height * .5,
               width: MediaQuery.of(context).size.width * 1,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color.fromRGBO(255, 150, 30,1),
 
               ),
 
               child: Column(
                 children: [
-                   SizedBox(height: 128, width: 30,),
+                   const SizedBox(height: 128, width: 30,),
                     Image.asset("assets/images/kabgornew.png", height: 100,),
-                  SizedBox(height: 10,),
-                  Text("Pemerintah Kabupaten", style: (TextStyle(color:  Color.fromRGBO(76, 81, 93, 1) , fontWeight: FontWeight.w700)),),
-                  Text("Gorontalo Utara", style: (TextStyle(color:  Color.fromRGBO(76, 81, 93, 1) , fontWeight: FontWeight.w700)),)
+                  const SizedBox(height: 10,),
+                  const Text("Pemerintah Kabupaten", style: (TextStyle(color:  Color.fromRGBO(76, 81, 93, 1) , fontWeight: FontWeight.w700)),),
+                  const Text("Gorontalo Utara", style: (TextStyle(color:  Color.fromRGBO(76, 81, 93, 1) , fontWeight: FontWeight.w700)),)
                 ],
               )
                  ),
@@ -69,7 +69,7 @@ class SigninContainer extends StatelessWidget {
             child: Container(
               height: MediaQuery.of(context).size.height * 0.20,
               width: MediaQuery.of(context).size.width * 1,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
 
                 color: Color.fromRGBO(255, 69, 0, 1),
               ),

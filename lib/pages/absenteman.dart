@@ -62,8 +62,8 @@ class _AbsenTemanState extends State<AbsenTeman> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              MyAppBar2(),
-              SizedBox(
+              const MyAppBar2(),
+              const SizedBox(
                 height: 250,
               ),
               Padding(
@@ -84,23 +84,23 @@ class _AbsenTemanState extends State<AbsenTeman> {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 25),
+                  padding: const EdgeInsets.symmetric(vertical: 25),
                   child: Column(
                     children: <Widget>[
-                      Icon(
+                      const Icon(
                         FluentIcons.people_checkmark_24_filled,
                         size: 100,
                         color: MyColor.orange1,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Text(
+                      const Text(
                         "ABSEN TEMAN",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w600),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -108,7 +108,7 @@ class _AbsenTemanState extends State<AbsenTeman> {
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<DropdownModel>(
                             isExpanded: true,
-                            hint: Text("Absen Teman"),
+                            hint: const Text("Absen Teman"),
                             value: selectedModel,
                             icon: const Icon(Icons.arrow_drop_down_sharp),
                             elevation: 16,
@@ -236,7 +236,7 @@ class _NextPageState extends State<NextPage> {
             )
           : Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 250,
                 ),
                 Padding(
@@ -257,22 +257,22 @@ class _NextPageState extends State<NextPage> {
                         ),
                       ],
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 25),
+                    padding: const EdgeInsets.symmetric(vertical: 25),
                     child: Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Mohon Tunggu\nSedang Diproses..",
                           style: TextStyle(fontSize: 18),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
-                        CircularProgressIndicator(
+                        const CircularProgressIndicator(
                           backgroundColor: Colors.grey,
                           color: Colors.purple,
                           strokeWidth: 5,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Container(

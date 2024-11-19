@@ -39,7 +39,7 @@ dependencies:
   fluentui_system_icons: ^1.1.186
   flutter:
     sdk: flutter
-  google_fonts: ^3.0.1
+
   cupertino_icons: ^1.0.5
   google_nav_bar: ^5.0.6
   line_icons: ^2.0.1
@@ -63,6 +63,8 @@ dependencies:
   file_picker: ^5.2.5
   document_file_save_plus: ^1.0.9
   external_path: ^1.0.3
+  google_fonts: ^4.0.4
+  
 
 
 

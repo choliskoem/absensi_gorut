@@ -282,7 +282,7 @@ class _AbsenPageOffState extends State<AbsenPageOff> {
             Container(
               margin: const EdgeInsets.all(8),
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.red),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () async {
                   await controller?.resumeCamera();
                 },
